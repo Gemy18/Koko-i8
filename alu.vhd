@@ -20,7 +20,7 @@ ARCHITECTURE struct OF alu IS
              		 cout : OUT std_logic);
         END COMPONENT;
 
-	signal f, a_in, b_in, notb, zerovec, onevec, result 	     : std_logic_vector (15 downto 0);
+	signal f, a_in, b_in, notb, zerovec, onevec, result,true_val 	     : std_logic_vector (15 downto 0);
 	signal cino, coutb, notcoutb, overflow_add, overflow_sub    : std_logic;
 begin
 	--Signals
@@ -28,6 +28,7 @@ begin
 	notcoutb <= not coutb; 
 	zerovec <= (OTHERS => '0');
 	onevec <= (OTHERS => '1');
+	true_val <= "0000000000000001";
 
 	overflow_add <= '1' when (a(15) ='0' and b(15) ='0' and result(15) = '1') or (a(15) ='1' and b(15) ='1' and result(15) = '0') else '0';
 	overflow_sub <= '1' when (a(15) ='0' and b(15) ='1' and result(15) = '1') or (a(15) ='1' and b(15) ='0' and result(15) = '0') else '0';
@@ -56,6 +57,7 @@ begin
 		  else std_logic_vector(shift_left(unsigned(a), to_integer(unsigned(b)))) when en='1' and s="01000"	--shl
 		  else std_logic_vector(shift_right(unsigned(a), to_integer(unsigned(b)))) when en='1' and s="01001"	--shr
 		  else (not a) when en='1' and s="01100"		--not
+		  else true_val when (en='1' and s="10000" and zin='1') or (en='1' and s="10001" and nin='1') or (en='1' and s="10010" and cin='1') or (en='1' and s="10011")
 		  else zerovec;
 
 	output <= result;
@@ -67,13 +69,13 @@ begin
 		else a(0) when s="00111"
 		else '1' when s="10100"			--setc
 		else '0' when s="10101"			--clrc
-		else cin when en='0' or s="10110" or s="10111" or s="11000" or s="11001" or s="11010"	--push, pop, ret, rti  and call
+		else cin when en='0' or s="10110" or s="10111" or s="11000" or s="11001" or s="11010" or s="10000" or s="10001" or s="10010" or s="10011"	--push, pop, ret, rti, jmp, and call
 		else '0';
-	N <= nin when en='0' or s="10100" or s="10101" or s="10110" or s="10111" or s="11000" or s="11001" or s="11010"
+	N <= nin when en='0' or s="10100" or s="10101" or s="10110" or s="10111" or s="11000" or s="11001" or s="11010" or s="10000" or s="10001" or s="10010" or s="10011"
 	     else result(15);
-	Z <= zin when en='0' or s="10100" or s="10101" or s="10110" or s="10111" or s="11000" or s="11001" or s="11010"
+	Z <= zin when en='0' or s="10100" or s="10101" or s="10110" or s="10111" or s="11000" or s="11001" or s="11010" or s="10000" or s="10001" or s="10010" or s="10011"
 	     else '1' when result = zerovec else '0';
-	V <= vin when en='0' or s="10100" or s="10101" or s="10110" or s="10111" or s="11000" or s="11001" or s="11010"
+	V <= vin when en='0' or s="10100" or s="10101" or s="10110" or s="10111" or s="11000" or s="11001" or s="11010" or s="10000" or s="10001" or s="10010" or s="10011"
 	     else overflow_add when s = "00010" or s = "01110"
 	     else overflow_sub when s = "00011" or s = "01111"
 	     else '0';
