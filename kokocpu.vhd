@@ -42,7 +42,24 @@ END Component;
 -------------------------------SIGNALS---------------------------------------------
 -----------------------------------------------------------------------------------
 
-
+--Mem Stage signals
+SIGNAL mem_wb_en : std_logic;
+-- SIGNAL mem_wb_op
+SIGNAL mem_pc : std_logic;
+SIGNAL mem_rs_d : std_logic;
+SIGNAL mem_rd_d : std_logic;
+SIGNAL mem_rd : std_logic;
+SIGNAL mem_ea : std_logic;
+SIGNAL mem_alu_out : std_logic;
+-- ram signals
+SIGNAL ram_en : std_logic;
+SIGNAL ram_wr : std_logic;
+-- SIGNAL ram_op
+SIGNAL ram_address : std_logic_vector(15 DOWNTO 0);
+SIGNAL ram_data_in : std_logic_vector(15 DOWNTO 0);
+SIGNAL ram_data_out: std_logic_vector(15 DOWNTO 0);
+-- signal for address mux
+-- signal for datain mux
 
 -----------------------------------------------------------------------------------
 -------------------------------END-SIGNALS-----------------------------------------
