@@ -57,7 +57,7 @@ begin
 		  else std_logic_vector(shift_left(unsigned(a), to_integer(unsigned(b)))) when en='1' and s="01000"	--shl
 		  else std_logic_vector(shift_right(unsigned(a), to_integer(unsigned(b)))) when en='1' and s="01001"	--shr
 		  else (not a) when en='1' and s="01100"		--not
-		  else true_val when (en='1' and s="10000" and zin='1') or (en='1' and s="10001" and nin='1') or (en='1' and s="10010" and cin='1') or (en='1' and s="10011")
+		  else true_val when (en='1' and s="10000" and zin='1') or (en='1' and s="10001" and nin='1') or (en='1' and s="10010" and cin='1') or (en='1' and s="10011") or (en='1' and s="11000")
 		  else zerovec;
 
 	output <= result;
