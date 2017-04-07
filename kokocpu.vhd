@@ -56,6 +56,24 @@ Component mux_4x1_16 IS
 		q : OUT std_logic_vector(15 downto 0));
 END Component;
 
+
+Component pc_selector IS
+	PORT(	inc_pc, alu_pc, mem_pc : IN std_logic_vector(15 DOWNTO 0);
+		alu_br_taken, mem_br_taken, intR, IF_int : IN std_logic;
+		output : OUT std_logic_vector(15 DOWNTO 0));
+END Component;
+
+Component pc_inc is
+    Port ( pc_in  : in  STD_LOGIC_VECTOR (15 downto 0);  
+           pc_out  : out STD_LOGIC_VECTOR (15 downto 0));
+end Component;
+Component instruction_mem IS
+	PORT(
+		address : IN  std_logic_vector(15 DOWNTO 0);
+		dataout : OUT std_logic_vector(31 DOWNTO 0));
+END Component instruction_mem;
+
+
 -----------------------------------------------------------------------------------
 -------------------------------END-Components--------------------------------------
 -----------------------------------------------------------------------------------
