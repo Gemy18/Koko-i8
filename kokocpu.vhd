@@ -17,6 +17,14 @@ ARCHITECTURE a_koko_micro OF koko_micro IS
 -------------------------------Components------------------------------------------
 -----------------------------------------------------------------------------------
 
+COMPONENT stage_reg IS
+	GENERIC (n : integer := 16);
+	PORT( Clk,Rst : IN std_logic;
+		  WE : IN std_logic;
+		  d : IN  std_logic_vector(n-1 DOWNTO 0);
+		  q : OUT std_logic_vector(n-1 DOWNTO 0));
+END COMPONENT;
+
 Component data_ram IS
 	PORT(
 		clk : IN std_logic;
@@ -98,6 +106,8 @@ SIGNAL out_port_en : std_logic;
 -----------------------------------------------------------------------------------
 Begin
 
+-- u1: stage_reg generic map (16) port map (Clk, Rst, we, d, q);
+
 -----------------------------------------------------------------------------------
 --------------------------------------------------------------Mem stage Connections
 -- mux_ram_address      : mux_2x1_16 port map(,mem_alu_out,mem_ea,ram_address); --sel ??
@@ -106,5 +116,7 @@ Begin
 
 -----------------------------------------------------------------------------------
 -------------------------------------------------------Write back stage connections 
+
+
 
 END a_koko_micro;
