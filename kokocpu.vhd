@@ -88,8 +88,10 @@ END Component instruction_mem;
 
 -----------------------------------------------------------------------------------
 --------------------------------------------------------------Execute Stage signals
-
-
+SIGNAL id_ex_reg_out: std_logic_vector (107 DOWNTO 0);
+SIGNAL selector_output: std_logic;
+SIGNAL rs_rd : std_logic_vector(15 DOWNTO 0);
+SIGNAL rt_imm : std_logic_vector(15 DOWNTO 0);
 -----------------------------------------------------------------------------------
 ------------------------------------------------------------------Mem Stage signals
 
@@ -143,8 +145,9 @@ Begin
 -----------------------------------------------------------------------------------
 --stage_id_ex_reg	: stage_reg generic map (87) port map (Clk, , '1', ,id_ex_reg_out);
 -----------------------------------------------------------------------------------
-
-
+s_selector : source_selector port map(id_ex_reg_out(94 downto 90),selector_output);
+mux_rs_rd  : mux_2x1_16 port map(selector_output, id_ex_reg_out(79 downto 64), id_ex_reg_out(47 downto 32), rs_rd);
+mux_rt_imm : mux_2x1_16 port map(selector_output, id_ex_reg_out(63 downto 48), id_ex_reg_out(15 downto 0), rt_imm);
 -----------------------------------------------------------------------------------
 --stage_ex_mem_reg	: stage_reg generic map (87) port map (Clk, , '1', ,ex_mem_reg_out);
 -----------------------------------------------------------------------------------
