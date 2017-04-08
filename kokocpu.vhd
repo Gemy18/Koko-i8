@@ -281,10 +281,10 @@ forwarding : forwarding_unit port map (id_ex_reg_out(88 downto 86), id_ex_reg_ou
 mux_rs_rd  : mux_2x1_16 port map(selector_output, id_ex_reg_out(79 downto 64), id_ex_reg_out(47 downto 32), rs_rd);
 mux_rt_imm : mux_2x1_16 port map(selector_output, id_ex_reg_out(63 downto 48), id_ex_reg_out(15 downto 0), rt_imm);
 
-forwarded_e_to_e <= ex_mem_reg_out (15 downto 0) when id_ex_reg_out(94 downto 90) = "11011"
+forwarded_e_to_e <= ex_mem_reg_out (15 downto 0) when ex_mem_reg_out(58 downto 54) = "11011"
 			 else ex_mem_reg_out(74 downto 59);
 
-forwarded_m_to_e <= mem_wb_reg_out (15 downto 0) when id_ex_reg_out(94 downto 90) = "11011"
+forwarded_m_to_e <= mem_wb_reg_out (15 downto 0) when mem_wb_reg_out(42 downto 38) = "11011"
 			 else mem_wb_reg_out(74 downto 59);
 
 
