@@ -3,3 +3,6 @@ work/*
 *.mpf
 *.wlf
 *.mti
+test_ins\.mem
+
+test_ram\.mem
