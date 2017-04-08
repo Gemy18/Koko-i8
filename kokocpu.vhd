@@ -108,7 +108,11 @@ SIGNAL IF_ID_reg_out, IF_ID_reg_in : std_logic_vector(49 DOWNTO 0);
 -----------------------------------------------------------------------------------
 --------------------------------------------------------------Execute Stage signals
 
-SIGNAL id_ex_reg_out, id_ex_reg_in : std_logic_vector(49 DOWNTO 0);
+SIGNAL id_ex_reg_out, id_ex_reg_in : std_logic_vector(108 DOWNTO 0);
+
+SIGNAL selector_output: std_logic;
+SIGNAL rs_rd : std_logic_vector(15 DOWNTO 0);
+SIGNAL rt_imm : std_logic_vector(15 DOWNTO 0);
 
 -----------------------------------------------------------------------------------
 ------------------------------------------------------------------Mem Stage signals
