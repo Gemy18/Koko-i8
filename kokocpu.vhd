@@ -272,7 +272,7 @@ mux_rt_imm : mux_2x1_16 port map(selector_output, id_ex_reg_out(63 downto 48), i
 muxa	   : mux_4x1_16 port map(mux_a, rs_rd,ex_mem_reg_out(74 downto 59),mem_wb_reg_out(74 downto 59),rs_rd, a);
 muxb	   : mux_4x1_16 port map(mux_b, rt_imm,ex_mem_reg_out(74 downto 59),mem_wb_reg_out(74 downto 59),rt_imm, b);
 
-alu_new_pc <= ex_mem_reg_out(47 downto 32);	--ask if this is correct and not id_ex_reg_out.
+alu_new_pc <= ex_mem_reg_out(31 downto 16);	--ask if this is correct and not id_ex_reg_out.
 alu1	   : alu port map(a,b, id_ex_reg_out(94 downto 90), id_ex_reg_out(89), flags_out(3), flags_out(2), flags_out(1), flags_out(0), alu_ex_out, flags_in(3), flags_in(2), flags_in(1), flags_in(0));
 
 flags_backup  : stage_reg generic map (4) port map (Clk, reset, id_ex_reg_out(95), flags_out, flags_old_out);
