@@ -10,7 +10,7 @@ END ENTITY instruction_mem;
 
 ARCHITECTURE a_instruction_mem OF instruction_mem IS
 
-	TYPE ram_type IS ARRAY(0 TO 2000) OF std_logic_vector(15 DOWNTO 0);
+	TYPE ram_type IS ARRAY(0 TO 1023) OF std_logic_vector(15 DOWNTO 0);
 	SIGNAL instruction_mem : ram_type;
 	
 	BEGIN
