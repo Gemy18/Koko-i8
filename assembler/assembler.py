@@ -112,7 +112,7 @@ def omer_magdy(filename,out1,out2):
         w1 = open(out1, 'w')
         w2 = open(out2, 'w')
         w1.write('''// memory data file (do not edit the following line - required for mem load use)
-// instance=/koko_micro/instruction_mem_port/instruction_mem
+// instance=/koko_micro/mem_data_ram/ram
 // format=mti addressradix=d dataradix=b version=1.0 wordsperline=1''')
         w1.write('\n')
         w2.write('''// memory data file (do not edit the following line - required for mem load use)

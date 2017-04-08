@@ -110,12 +110,12 @@ port(clk , rst: in std_logic;
 rsdata : out std_logic_vector(15 downto 0);
 rtdata : out std_logic_vector(15 downto 0);
 rdata, r0, r1, r2, r3, r4, r5, r6 : out std_logic_vector(15 downto 0);
-write_en: in std_logic ;
-write_back_add:  std_logic_vector(2 downto 0);
-write_back_data: std_logic_vector(15 downto 0);
-rs:  std_logic_vector(2 downto 0);
-rt:  std_logic_vector(2 downto 0);
-rd:  std_logic_vector(2 downto 0));
+write_en, r6_en: in std_logic ;
+write_back_add: in std_logic_vector(2 downto 0);
+write_back_data,  r6_d: in std_logic_vector(15 downto 0);
+rs: in std_logic_vector(2 downto 0);
+rt: in std_logic_vector(2 downto 0);
+rd: in std_logic_vector(2 downto 0));
 end Component REGFILE;
 
 Component control_unit IS
@@ -203,6 +203,8 @@ SIGNAL mem_wb_reg_out : std_logic_vector(98 DOWNTO 0);
 SIGNAL wb_en : std_logic;
 SIGNAL wb_data : std_logic_vector(15 DOWNTO 0);
 SIGNAL wb_add: std_logic_vector(2 DOWNTO 0);
+SIGNAL wb_r6_d : std_logic_vector(15 DOWNTO 0);
+SIGNAL wb_r6_en : std_logic;
 
 -- in and out buffers
 SIGNAL in_port_en : std_logic;
@@ -246,8 +248,8 @@ rd <= IF_ID_reg_out(20 downto 18);
 stall_detector_port : stall_detector port map (rs_selected, rt, rd, id_ex_reg_out(88 downto 86), 
 	read_en, ex_mem_reg_out(50 downto 48), id_ex_reg_out(82 downto 80), id_ex_reg_out(107), op_signal, ex_mem_reg_out(58 downto 54), stall_sig);
 
-REGFILE_port : REGFILE port map (clk_reg_file, reset, rs_data, rt_data, rd_data, r0, r1, r2, r3, r4, r5, r6, wb_en, wb_add,
- 	wb_data, rs_selected, rt, rd);
+REGFILE_port : REGFILE port map (clk_reg_file, reset, rs_data, rt_data, rd_data, r0, r1, r2, r3, r4, r5, r6, wb_en, wb_r6_en, wb_add,
+ 	wb_data, wb_r6_d, rs_selected, rt, rd);
 
 control_unit_port : control_unit port map (op_signal, stall_sig, IF_ID_reg_out(49), 
 	br_taken, wb_signals, ram_signals, alu_signals, read_en, in_en_signal, out_en_signal, 
@@ -362,6 +364,9 @@ wb_en <= mem_wb_reg_out(75);
 wb_add <=  mem_wb_reg_out(37 DOWNTO 35) when mem_wb_reg_out(79) = '0'
 	else mem_wb_reg_out(34 DOWNTO 32) when mem_wb_reg_out(79) = '1'
 	else "000";
+
+wb_r6_d <= mem_wb_reg_out(58 DOWNTO 43);
+wb_r6_en <= '1' when mem_wb_reg_out(42 DOWNTO 38) = "10111" else '0';
 
 
 

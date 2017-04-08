@@ -6,9 +6,9 @@ port(clk , rst: in std_logic;
 rsdata : out std_logic_vector(15 downto 0);
 rtdata : out std_logic_vector(15 downto 0);
 rdata, r0, r1, r2, r3, r4, r5, r6 : out std_logic_vector(15 downto 0);
-write_en: in std_logic ;
+write_en, r6_en: in std_logic ;
 write_back_add: in std_logic_vector(2 downto 0);
-write_back_data: in std_logic_vector(15 downto 0);
+write_back_data,  r6_d: in std_logic_vector(15 downto 0);
 rs: in std_logic_vector(2 downto 0);
 rt: in std_logic_vector(2 downto 0);
 rd: in std_logic_vector(2 downto 0));
@@ -30,20 +30,23 @@ COMPONENT reg IS
 END COMPONENT;
 
 signal out_dec: STD_LOGIC_VECTOR (7 downto 0);
-signal out_reg1,out_reg2,out_reg3,out_reg4,out_reg5,out_reg6, out_reg7: STD_LOGIC_VECTOR (15 downto 0);
+signal out_reg1,out_reg2,out_reg3,out_reg4,out_reg5,out_reg6, out_reg7, wb_d, sp_data: STD_LOGIC_VECTOR (15 downto 0);
+signal sp_select : std_logic;
 
 begin
 
-
+sp_select <= out_dec(6) or rst or r6_en;
+wb_d <= write_back_data when rst = '0' else "0000001111111111";
+sp_data <= wb_d when r6_en = '0' else r6_d;
 
 decoder:   dec_3_x_8  port map (write_back_add,out_dec,write_en);
-reg1:   reg  port map (clk,rst,out_dec(0),write_back_data,out_reg1);
-reg2:   reg  port map (clk,rst,out_dec(1),write_back_data,out_reg2);
-reg3:   reg  port map (clk,rst,out_dec(2),write_back_data,out_reg3);
-reg4:   reg  port map (clk,rst,out_dec(3),write_back_data,out_reg4);
-reg5:   reg  port map (clk,rst,out_dec(4),write_back_data,out_reg5);
-reg6:   reg  port map (clk,rst,out_dec(5),write_back_data,out_reg6);
-reg7:   reg  port map (clk,rst,out_dec(6),write_back_data,out_reg7);
+reg1:   reg  port map (clk,rst,out_dec(0),wb_d,out_reg1);
+reg2:   reg  port map (clk,rst,out_dec(1),wb_d,out_reg2);
+reg3:   reg  port map (clk,rst,out_dec(2),wb_d,out_reg3);
+reg4:   reg  port map (clk,rst,out_dec(3),wb_d,out_reg4);
+reg5:   reg  port map (clk,rst,out_dec(4),wb_d,out_reg5);
+reg6:   reg  port map (clk,rst,out_dec(5),wb_d,out_reg6);
+reg7:   reg  port map (clk,'0',sp_select,sp_data,out_reg7);
 
 
 
