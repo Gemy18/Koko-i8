@@ -147,10 +147,12 @@ SIGNAL stall_sig, pc_en : std_logic;
 
 SIGNAL IF_ID_reg_out, IF_ID_reg_in : std_logic_vector(49 DOWNTO 0);
 
-SIGNAL rs_data, rt_data, rd_data, wb_data : std_logic_vector(15 downto 0);
-SIGNAL wb_add, read_en, rs_selected : std_logic_vector(2 downto 0);
-SIGNAL wb_en, br_taken, sp_select : std_logic;
+SIGNAL rs_data, rt_data, rd_data, wb_data, pc_signal, ea_imm_signal : std_logic_vector(15 downto 0);
+SIGNAL wb_add, read_en, rs_selected, rt, rd : std_logic_vector(2 downto 0);
+SIGNAL wb_en, br_taken, sp_select, out_en_signal, in_en_signal, ld_signal : std_logic;
 SIGNAL alu_signals : std_logic_vector(1 downto 0);
+SIGNAL op_signal, wb_signals : std_logic_vector(4 downto 0);
+SIGNAL ram_signals : std_logic_vector(3 downto 0);
 
 -----------------------------------------------------------------------------------
 --------------------------------------------------------------Execute Stage signals
@@ -232,31 +234,40 @@ stage_IF_ID_reg	: stage_reg generic map (50) port map (Clk, reset, pc_en, IF_ID_
 -----------------------------------------------------------Decode stage Connections
 
 br_taken <= (mem_br_taken or alu_br_taken);
+op_signal <= IF_ID_reg_out(31 downto 27);
+pc_signal <= IF_ID_reg_out(47 downto 32);
+ea_imm_signal <= IF_ID_reg_out(15 downto 0);
+rs_selected <= "110" when sp_select = '1' else IF_ID_reg_out(26 downto 24);
+rt <= IF_ID_reg_out(23 downto 21);
+rd <= IF_ID_reg_out(20 downto 18);
 
-rs_selected <= "110" when sp_select = '1'
-		else IF_ID_reg_out(26 downto 24);
-
-stall_detector_port : stall_detector port map (rs_selected, IF_ID_reg_out(23 downto 21), 
-	IF_ID_reg_out(20 downto 18), id_ex_reg_out(88 downto 86), read_en, id_ex_reg_out(107), stall_sig);
+stall_detector_port : stall_detector port map (rs_selected, rt, rd, id_ex_reg_out(88 downto 86), 
+	read_en, id_ex_reg_out(107), stall_sig);
 
 REGFILE_port : REGFILE port map (clk_reg_file, reset, rs_data, rt_data, rd_data, wb_en, wb_add,
- wb_data, rs_selected, IF_ID_reg_out(23 downto 21), IF_ID_reg_out(20 downto 18));
+ 	wb_data, rs_selected, rt, rd);
 
-control_unit_port : control_unit port map (IF_ID_reg_out(31 downto 27), stall_sig,
-	 IF_ID_reg_out(49), br_taken, id_ex_reg_in(104 downto 100), id_ex_reg_in(99 downto 96), 
-	alu_signals, read_en, id_ex_reg_in(105), id_ex_reg_in(106), sp_select, id_ex_reg_in(107));
+control_unit_port : control_unit port map (op_signal, stall_sig, IF_ID_reg_out(49), 
+	br_taken, wb_signals, ram_signals, alu_signals, read_en, in_en_signal, out_en_signal, 
+	sp_select, ld_signal);
 
-id_ex_reg_in(89) <= alu_signals(0);
-id_ex_reg_in(94 downto 90) <= IF_ID_reg_out(31 downto 27);
+
+id_ex_reg_in(107) <= ld_signal;
+id_ex_reg_in(106) <= out_en_signal;
+id_ex_reg_in(105) <= in_en_signal;
+id_ex_reg_in(104 downto 100) <= wb_signals;
+id_ex_reg_in(99 downto 96) <= ram_signals;
 id_ex_reg_in(95) <= alu_signals(1);
-id_ex_reg_in(15 downto 0) <= IF_ID_reg_out(15 downto 0);
-id_ex_reg_in(31 downto 16) <= IF_ID_reg_out(47 downto 32);
-id_ex_reg_in(47 downto 32) <= rd_data when IF_ID_reg_out(49) = '0' else IF_ID_reg_out(47 downto 32);
-id_ex_reg_in(63 downto 48) <= rt_data;
-id_ex_reg_in(79 downto 64) <= rs_data;
+id_ex_reg_in(94 downto 90) <= op_signal;
+id_ex_reg_in(89) <= alu_signals(0);
+id_ex_reg_in(88 downto 86) <= rd;
+id_ex_reg_in(85 downto 83) <= rt;
 id_ex_reg_in(82 downto 80) <= rs_selected;
-id_ex_reg_in(85 downto 83) <= IF_ID_reg_out(23 downto 21);
-id_ex_reg_in(88 downto 86) <= IF_ID_reg_out(20 downto 18);
+id_ex_reg_in(79 downto 64) <= rs_data;
+id_ex_reg_in(63 downto 48) <= rt_data;
+id_ex_reg_in(47 downto 32) <= rd_data when IF_ID_reg_out(49) = '0' else pc_signal;
+id_ex_reg_in(31 downto 16) <= pc_signal;
+id_ex_reg_in(15 downto 0) <= ea_imm_signal;
 
 -----------------------------------------------------------------------------------
 stage_id_ex_reg	: stage_reg generic map (108) port map (Clk, reset, '1', id_ex_reg_in, id_ex_reg_out);
