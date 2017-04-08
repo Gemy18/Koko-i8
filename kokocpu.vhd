@@ -281,7 +281,7 @@ stage_id_ex_reg	: stage_reg generic map (108) port map (Clk, reset, '1', id_ex_r
 -----------------------------------------------------------Execute stage Connections
 s_selector : source_selector port map(id_ex_reg_out(94 downto 90),selector_output);
 
-forwarding : forwarding_unit port map (id_ex_reg_out(88 downto 86), id_ex_reg_out(85 downto 83), id_ex_reg_out(82 downto 80), mem_wb_reg_out(34 downto 32), mem_wb_reg_out(37 downto 35), ex_mem_reg_out(50 downto 48), selector_output, mem_wb_reg_out(75), ex_mem_reg_out(79),mem_wb_reg_out(79), ex_mem_reg_out(76), mux_mem_s, mux_a,mux_b);
+forwarding : forwarding_unit port map (id_ex_reg_out(94 downto 90), ex_mem_reg_out(58 downto 54), mem_wb_reg_out(42 downto 38),id_ex_reg_out(88 downto 86), id_ex_reg_out(85 downto 83), id_ex_reg_out(82 downto 80), mem_wb_reg_out(34 downto 32), mem_wb_reg_out(37 downto 35), ex_mem_reg_out(50 downto 48), selector_output, mem_wb_reg_out(75), ex_mem_reg_out(79),mem_wb_reg_out(79), ex_mem_reg_out(76), mux_mem_s, mux_a,mux_b);
 
 mux_rs_rd  : mux_2x1_16 port map(selector_output, id_ex_reg_out(79 downto 64), id_ex_reg_out(47 downto 32), rs_rd);
 mux_rt_imm : mux_2x1_16 port map(selector_output, id_ex_reg_out(63 downto 48), id_ex_reg_out(15 downto 0), rt_imm);
