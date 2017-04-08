@@ -14,7 +14,7 @@ END control_unit;
 ARCHITECTURE a_control_unit OF control_unit IS
 	BEGIN
 
-		PROCESS(op)
+		PROCESS(op, IF_int, stall, br_taken)
 			BEGIN
 			IF op = "00000" or stall = '1' or br_taken = '1' THEN
 				wb <= "00000";
