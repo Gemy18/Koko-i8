@@ -56,6 +56,12 @@ Component mux_4x1_16 IS
 		q : OUT std_logic_vector(15 downto 0));
 END Component;
 
+Component mux_8x1_16 IS
+	PORT(	sel : IN std_logic_vector(2 downto 0);
+            x0,x1,x2,x3,x4,x5,x6,x7  : IN std_logic_vector(15 downto 0);
+		    q : OUT std_logic_vector(15 downto 0));
+END Component;
+
 COMPONENT source_selector IS
 	PORT( opcode: in std_logic_vector(4 downto 0);
 	      output: out std_logic);
@@ -147,9 +153,9 @@ SIGNAL stall_sig, pc_en : std_logic;
 
 SIGNAL IF_ID_reg_out, IF_ID_reg_in : std_logic_vector(49 DOWNTO 0);
 
-SIGNAL rs_data, rt_data, rd_data, wb_data, pc_signal, ea_imm_signal : std_logic_vector(15 downto 0);
-SIGNAL wb_add, read_en, rs_selected, rt, rd : std_logic_vector(2 downto 0);
-SIGNAL wb_en, br_taken, sp_select, out_en_signal, in_en_signal, ld_signal : std_logic;
+SIGNAL rs_data, rt_data, rd_data, pc_signal, ea_imm_signal : std_logic_vector(15 downto 0);
+SIGNAL read_en, rs_selected, rt, rd : std_logic_vector(2 downto 0);
+SIGNAL br_taken, sp_select, out_en_signal, in_en_signal, ld_signal : std_logic;
 SIGNAL alu_signals : std_logic_vector(1 downto 0);
 SIGNAL op_signal, wb_signals : std_logic_vector(4 downto 0);
 SIGNAL ram_signals : std_logic_vector(3 downto 0);
@@ -173,42 +179,32 @@ SIGNAL ex_mem_reg_in : std_logic_vector(86 DOWNTO 0);
 SIGNAL ex_mem_reg_out : std_logic_vector(86 DOWNTO 0);
 SIGNAL mem_wb_reg_reset : std_logic;
 
-SIGNAL mem_wb_en : std_logic;
--- SIGNAL mem_wb_op
-SIGNAL mem_pc : std_logic;
-SIGNAL mem_rs_d : std_logic;
-SIGNAL mem_rd_d : std_logic;
-SIGNAL mem_rd : std_logic;
-SIGNAL mem_ea : std_logic;
-SIGNAL mem_alu_out : std_logic;
 -- ram signals
 SIGNAL mem_ram_en : std_logic;
 SIGNAL mem_ram_wr : std_logic;
--- SIGNAL ram_op
 SIGNAL ram_address : std_logic_vector(15 DOWNTO 0);
-SIGNAL ram_data_in : std_logic_vector(15 DOWNTO 0);
 SIGNAL ram_data_out: std_logic_vector(15 DOWNTO 0);
+
 SIGNAL mem_zero_vec: std_logic_vector(15 DOWNTO 0);
 
 SIGNAL mem_new_pc : std_logic_vector(15 DOWNTO 0);
+SIGNAL mem_new_pc_reg : std_logic_vector(15 DOWNTO 0);
+SIGNAL mem_br_taken_en_reg : std_logic;
 SIGNAL mem_br_taken : std_logic;
 
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------Write back Stage signals
-SIGNAL mem_wb_reg_out : std_logic_vector(86 DOWNTO 0);
+SIGNAL mem_wb_reg_in : std_logic_vector(98 DOWNTO 0);
+SIGNAL mem_wb_reg_out : std_logic_vector(98 DOWNTO 0);
 
-SIGNAL wb_wb_en : std_logic;
--- SIGNAL wb_wb_op : std_logic;
-
-SIGNAL wb_data_out : std_logic_vector(15 DOWNTO 0);
-SIGNAL wb_alu_out : std_logic_vector(15 DOWNTO 0);
-SIGNAL wb_imm : std_logic_vector(15 DOWNTO 0);
-SIGNAL wb_rs_d : std_logic_vector(15 DOWNTO 0);
-SIGNAL wb_in_d : std_logic_vector(15 DOWNTO 0);
+SIGNAL wb_en : std_logic;
+SIGNAL wb_data : std_logic_vector(15 DOWNTO 0);
+SIGNAL wb_add: std_logic_vector(2 DOWNTO 0);
 
 -- in and out buffers
 SIGNAL in_port_en : std_logic;
 SIGNAL out_port_en : std_logic;
+SIGNAL in_port_buf_out : std_logic_vector(15 DOWNTO 0);
 -----------------------------------------------------------------------------------
 -------------------------------END-SIGNALS-----------------------------------------
 -----------------------------------------------------------------------------------
@@ -283,7 +279,7 @@ mux_rt_imm : mux_2x1_16 port map(selector_output, id_ex_reg_out(63 downto 48), i
 muxa	   : mux_4x1_16 port map(mux_a, rs_rd,ex_mem_reg_out(74 downto 59),mem_wb_reg_out(74 downto 59),rs_rd, a);
 muxb	   : mux_4x1_16 port map(mux_b, rt_imm,ex_mem_reg_out(74 downto 59),mem_wb_reg_out(74 downto 59),rt_imm, b);
 
-alu_new_pc <= ex_mem_reg_out(47 downto 32);	--ask if this is correct and not id_ex_reg_out.
+alu_new_pc <= ex_mem_reg_out(31 downto 16);	--ask if this is correct and not id_ex_reg_out.
 alu1	   : alu port map(a,b, id_ex_reg_out(94 downto 90), id_ex_reg_out(89), flags_out(3), flags_out(2), flags_out(1), flags_out(0), alu_ex_out, flags_in(3), flags_in(2), flags_in(1), flags_in(0));
 
 flags_backup  : stage_reg generic map (4) port map (Clk, reset, id_ex_reg_out(95), flags_out, flags_old_out);
@@ -321,25 +317,34 @@ ex_mem_reg_reset <= '1' when rst_basedon_taken = '1'
 -----------------------------------------------------------------------------------
 stage_ex_mem_reg	: stage_reg generic map (87) port map (Clk, ex_mem_reg_reset, '1', ex_mem_reg_in, ex_mem_reg_out);
 -----------------------------------------------------------------------------------
-
------------------------------------------------------------------------------------
 --------------------------------------------------------------Mem stage Connections
 mux_ram_address      : mux_4x1_16 port map(ex_mem_reg_out(78 DOWNTO 77),mem_zero_vec,ex_mem_reg_out(15 DOWNTO 0),ex_mem_reg_out(47 DOWNTO 32),ex_mem_reg_out(74 DOWNTO 59),ram_address);
 mem_data_ram         : data_ram port map(clk_mem,mem_ram_en,ex_mem_reg_out(76),ram_address,ex_mem_reg_out(31 DOWNTO 16),ram_data_out);
-mem_new_pc_tri       : tri port map(mem_br_taken,ram_data_out,mem_new_pc);
+mem_new_pc_tri       : tri port map(mem_br_taken,ram_data_out,mem_new_pc_reg);
 
-mem_br_taken <= '1' when ex_mem_reg_out(58 DOWNTO 54) = "11001" or ex_mem_reg_out(58 DOWNTO 54) = "11010"
+mem_br_taken_en_reg <= '1' when ex_mem_reg_out(58 DOWNTO 54) = "11001" or ex_mem_reg_out(58 DOWNTO 54) = "11010"
 	   else '0';
+mem_br_taken <= mem_wb_reg_out(82);
+mem_new_pc <= mem_wb_reg_out(98 DOWNTO 83);
 mem_wb_reg_reset <= '1' when mem_wb_reg_out(82) = '1'
 		else reset;
 mem_ram_en <= '0' when mem_wb_reg_out(82) = '1'
 		else '1' when ex_mem_reg_out(76) = '0'
 		else ex_mem_reg_out(75);
 
+mem_wb_reg_in <= mem_new_pc_reg & mem_br_taken_en_reg & ex_mem_reg_out(85 DOWNTO 79) & ram_data_out & ex_mem_reg_out(74 DOWNTO 48) & ex_mem_reg_out(47 DOWNTO 32) & ex_mem_reg_out(15 DOWNTO 0);
 -----------------------------------------------------------------------------------
---stage_mem_wb_reg	: stage_reg generic map (83) port map (Clk, mem_wb_reg_reset, '1', , mem_wb_reg_out);
+stage_mem_wb_reg     : stage_reg generic map (99) port map (Clk, mem_wb_reg_reset, '1', mem_wb_reg_in , mem_wb_reg_out);
 -----------------------------------------------------------------------------------
--------------------------------------------------------Write back stage connections 
+-------------------------------------------------------Write back stage connections
+mux_wb               : mux_8x1_16 port map(mem_wb_reg_out(78 DOWNTO 76),mem_zero_vec,mem_wb_reg_out(74 DOWNTO 59),mem_wb_reg_out(58 DOWNTO 43),mem_wb_reg_out(15 DOWNTO 0),mem_wb_reg_out(31 DOWNTO 16),in_port_buf_out,mem_zero_vec,mem_zero_vec,wb_data);
+wb_in_port_tri 	     : tri port map(mem_wb_reg_out(80),in_port,in_port_buf_out);
+wb_out_port_tri      : tri port map(mem_wb_reg_out(81),wb_data,out_port);
+mem_zero_vec <= "0000000000000000";
+wb_en <= mem_wb_reg_out(75);
+wb_add <=  mem_wb_reg_out(37 DOWNTO 35) when mem_wb_reg_out(79) = '0'
+	else mem_wb_reg_out(34 DOWNTO 32) when mem_wb_reg_out(79) = '1'
+	else "000";
 
 
 
