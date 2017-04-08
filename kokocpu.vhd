@@ -84,6 +84,19 @@ Component reg IS
 		  q : OUT std_logic_vector(15 DOWNTO 0));
 END Component reg;
 
+Component forwarding_unit IS
+	PORT( rs,rt,rd,mem_rd,ex_rd: in std_logic_vector(2 downto 0);
+	      source_selector, mem_wb, ex_wb: in std_logic;
+	      mux1_s,mux2_s: out std_logic_vector(1 downto 0));
+END Component;
+
+Component alu IS
+	PORT(   a,b : IN std_logic_vector (15 downto 0); 	--Operands are a,b
+		s : IN std_logic_vector (4 downto 0);		--S is the selector of the chips
+		en,cin,nin,vin,zin : IN std_logic;  		--Input flags IN
+		output : OUT std_logic_vector (15 downto 0);	--Output Value
+		Cout,N,V,Z : OUT std_logic);			--Output flags
+END Component;
 
 -----------------------------------------------------------------------------------
 -------------------------------END-Components--------------------------------------
@@ -110,10 +123,12 @@ SIGNAL IF_ID_reg_out, IF_ID_reg_in : std_logic_vector(49 DOWNTO 0);
 
 SIGNAL id_ex_reg_out, id_ex_reg_in : std_logic_vector(108 DOWNTO 0);
 
-SIGNAL selector_output: std_logic;
+SIGNAL alu_br_taken, selector_output, rst_basedon_taken, br_opcode,true_val: std_logic;
 SIGNAL rs_rd : std_logic_vector(15 DOWNTO 0);
-SIGNAL rt_imm : std_logic_vector(15 DOWNTO 0);
-
+SIGNAL rt_imm, alu_ex_out : std_logic_vector(15 DOWNTO 0);
+SIGNAL mux_a, mux_b : std_logic_vector(1 DOWNTO 0);
+SIGNAL a,b : std_logic_vector(15 DOWNTO 0);
+SIGNAL flags_in, flags_out, flags_old_out, to_flags : std_logic_vector (3 DOWNTO 0);
 -----------------------------------------------------------------------------------
 ------------------------------------------------------------------Mem Stage signals
 
@@ -188,8 +203,27 @@ stage_id_ex_reg	: stage_reg generic map (108) port map (Clk, reset, '1', id_ex_r
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------Execute stage Connections
 s_selector : source_selector port map(id_ex_reg_out(94 downto 90),selector_output);
+forwarding : forwarding_unit port map (id_ex_reg_out(88 downto 86), id_ex_reg_out(85 downto 83), id_ex_reg_out(82 downto 80), mem_wb_reg_out(34 downto 32), ex_mem_reg_out(50 downto 48), selector_output, mem_wb_reg_out(75), ex_mem_reg_out(79), mux_a,mux_b);
+
 mux_rs_rd  : mux_2x1_16 port map(selector_output, id_ex_reg_out(79 downto 64), id_ex_reg_out(47 downto 32), rs_rd);
 mux_rt_imm : mux_2x1_16 port map(selector_output, id_ex_reg_out(63 downto 48), id_ex_reg_out(15 downto 0), rt_imm);
+muxa	   : mux_4x1_16 port map(mux_a, rs_rd,ex_mem_reg_out(74 downto 59),mem_wb_reg_out(74 downto 59),rs_rd, a);
+muxb	   : mux_4x1_16 port map(mux_b, rt_imm,ex_mem_reg_out(74 downto 59),mem_wb_reg_out(74 downto 59),rt_imm, b);
+
+alu1	   : alu port map(a,b, id_ex_reg_out(94 downto 90), id_ex_reg_out(89), flags_out(3), flags_out(2), flags_out(1), flags_out(0), alu_ex_out, flags_in(3), flags_in(2), flags_in(1), flags_in(0));
+
+flags_backup  : stage_reg generic map (4) port map (Clk, reset, id_ex_reg_out(95), flags_out, flags_old_out);
+to_flags <= flags_old_out when id_ex_reg_out(94 downto 90) = "11010"	--when rti, get backup flags.
+	    else flags_in;
+flags_current : stage_reg generic map (4) port map (Clk, reset, '1', to_flags, flags_out);
+
+br_opcode <= '1' when id_ex_reg_out(94 downto 90) = "10000" or id_ex_reg_out(94 downto 90) = "10001" or id_ex_reg_out(94 downto 90) = "10010" or id_ex_reg_out(94 downto 90) = "10011"
+	     else '0';
+alu_br_taken <= '1' when br_opcode = '1' and alu_ex_out(0) = '1'
+		else '0';
+rst_basedon_taken <= '1' when (alu_br_taken = '1' or mem_br_taken = '1')
+		     else '0';
+
 
 -----------------------------------------------------------------------------------
 --stage_ex_mem_reg	: stage_reg generic map (87) port map (Clk, , '1', ,ex_mem_reg_out);
