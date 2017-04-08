@@ -67,11 +67,18 @@ Component pc_inc is
     Port ( pc_in  : in  STD_LOGIC_VECTOR (15 downto 0);  
            pc_out  : out STD_LOGIC_VECTOR (15 downto 0));
 end Component;
+
 Component instruction_mem IS
 	PORT(
 		address : IN  std_logic_vector(15 DOWNTO 0);
 		dataout : OUT std_logic_vector(31 DOWNTO 0));
 END Component instruction_mem;
+
+ENTITY reg IS
+	PORT( clk,rst,en : IN std_logic;
+		  d : IN  std_logic_vector(15 DOWNTO 0);
+		  q : OUT std_logic_vector(15 DOWNTO 0));
+END reg;
 
 
 -----------------------------------------------------------------------------------
@@ -81,6 +88,18 @@ END Component instruction_mem;
 -----------------------------------------------------------------------------------
 -------------------------------SIGNALS---------------------------------------------
 -----------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------
+----------------------------------------------------------------fetch Stage signals
+
+SIGNAL pc_input, pc_output, pc_incremented : std_logic_vector(15 DOWNTO 0);
+SIGNAL ir : std_logic_vector(31 DOWNTO 0);
+SIGNAL stall_sig, pc_en : std_logic;
+
+-----------------------------------------------------------------------------------
+---------------------------------------------------------------decode Stage signals
+
+SIGNAL IF_ID_reg_out, IF_ID_reg_in : std_logic_vector(48 DOWNTO 0);
 
 -----------------------------------------------------------------------------------
 ------------------------------------------------------------------Mem Stage signals
@@ -132,6 +151,25 @@ SIGNAL out_port_en : std_logic;
 -------------------------------Connections-----------------------------------------
 -----------------------------------------------------------------------------------
 Begin
+
+-----------------------------------------------------------------------------------
+------------------------------------------------------------Fetch stage Connections
+
+pc_en <= not stall_sig;
+pc_reg	: reg port map (clk, reset, pc_en, pc_input, pc_output);
+instruction_mem	: instruction_mem port map (pc_output, ir);
+pc_inc : pc_inc port map (pc_output, pc_incremented);
+pc_selector : pc_selector port map (pc_incremented, alu_new_pc, mem_new_pc, alu_br_taken, mem_br_taken, intR, IF_ID_reg_out(48), pc_input);
+IF_ID_reg_in <= (int_r and (not IF_ID_reg_out(48))) & pc_incremented & ir;
+
+-----------------------------------------------------------------------------------
+stage_IF_ID_reg	: stage_reg generic map (49) port map (Clk, reset, pc_en, IF_ID_reg_in, IF_ID_reg_out);
+-----------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------Decode stage Connections
+
+
 
 -----------------------------------------------------------------------------------
 --stage_ex_mem_reg	: stage_reg generic map (87) port map (Clk, , '1', ,ex_mem_reg_out);
