@@ -6,3 +6,5 @@ work/*
 test_ins\.mem
 
 test_ram\.mem
+
+*.mem

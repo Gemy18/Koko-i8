@@ -294,14 +294,20 @@ mux_rt_imm : mux_2x1_16 port map(selector_output, id_ex_reg_out(63 downto 48), i
 forwarded_e_to_e <= ex_mem_reg_out (15 downto 0) when ex_mem_reg_out(58 downto 54) = "11011"
 			 else ex_mem_reg_out(74 downto 59);
 
-forwarded_m_to_e <= mem_wb_reg_out (15 downto 0) when mem_wb_reg_out(42 downto 38) = "11011"
-			 else mem_wb_reg_out(74 downto 59);
+forwarded_m_to_e <= mem_wb_reg_out (15 downto 0) when mem_wb_reg_out(42 downto 38) = "11011" or mem_wb_reg_out(78 downto 76) = "011" 
+       else mem_wb_reg_out(74 downto 59) when mem_wb_reg_out(78 downto 76) = "001" 
+       else mem_wb_reg_out(58 downto 43) when mem_wb_reg_out(78 downto 76) = "010" 
+       else mem_wb_reg_out(31 downto 16) when mem_wb_reg_out(78 downto 76) = "100"
+       else "0000000000000000"; 
 
 
 muxa	   : mux_4x1_16 port map(mux_a, rs_rd, forwarded_e_to_e, forwarded_m_to_e, rs_rd, a);
 muxb	   : mux_4x1_16 port map(mux_b, rt_imm,forwarded_e_to_e, forwarded_m_to_e, rt_imm, b);
 
-alu_new_pc <= ex_mem_reg_out(31 downto 16);	--ask if this is correct and not id_ex_reg_out.
+alu_new_pc <= forwarded_e_to_e when mux_a="01"
+	      else forwarded_m_to_e when mux_a="10"
+	      else ex_mem_reg_out(31 downto 16);	--ask if this is correct and not id_ex_reg_out.
+
 alu1	   : alu port map(a,b, id_ex_reg_out(94 downto 90), id_ex_reg_out(89), flags_out(3), flags_out(2), flags_out(1), flags_out(0), alu_ex_out, flags_in(3), flags_in(2), flags_in(1), flags_in(0));
 
 flags_backup  : stage_reg generic map (4) port map (Clk, reset, id_ex_reg_out(95), flags_out, flags_old_out);
