@@ -145,7 +145,8 @@ END Component stall_detector;
 
 -----------------------------------------------------------------------------------
 ----------------------------------------------------------------fetch Stage signals
-
+SIGNAL zerovec1: std_logic_vector(86 DOWNTO 0);
+SIGNAL zerovec2: std_logic_vector(98 DOWNTO 0);
 SIGNAL pc_input, pc_output, pc_incremented : std_logic_vector(15 DOWNTO 0);
 SIGNAL ir : std_logic_vector(31 DOWNTO 0);
 SIGNAL stall_sig, pc_en : std_logic;
@@ -175,7 +176,7 @@ SIGNAL a,b : std_logic_vector(15 DOWNTO 0);
 SIGNAL flags_in, flags_out, flags_old_out, to_flags : std_logic_vector (3 DOWNTO 0);
 
 SIGNAL ex_mem_reg_in : std_logic_vector(86 DOWNTO 0);
-
+SIGNAL ex_mem_reg_in_or_rst : std_logic_vector(86 DOWNTO 0);
 SIGNAL forwarded_e_to_e : std_logic_vector(15 DOWNTO 0);
 SIGNAL forwarded_m_to_e : std_logic_vector(15 DOWNTO 0);
 -----------------------------------------------------------------------------------
@@ -198,6 +199,7 @@ SIGNAL mem_br_taken : std_logic;
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------Write back Stage signals
 SIGNAL mem_wb_reg_in : std_logic_vector(98 DOWNTO 0);
+SIGNAL mem_wb_reg_in_or_rst : std_logic_vector(98 DOWNTO 0);
 SIGNAL mem_wb_reg_out : std_logic_vector(98 DOWNTO 0);
 
 SIGNAL wb_en : std_logic;
@@ -220,6 +222,8 @@ SIGNAL in_port_buf_out : std_logic_vector(15 DOWNTO 0);
 
 Begin
 
+zerovec1 <= (OTHERS => '0');
+zerovec2 <= (OTHERS => '0');
 -----------------------------------------------------------------------------------
 ------------------------------------------------------------Fetch stage Connections
 
@@ -289,10 +293,9 @@ mux_rt_imm : mux_2x1_16 port map(selector_output, id_ex_reg_out(63 downto 48), i
 forwarded_e_to_e <= ex_mem_reg_out (15 downto 0) when ex_mem_reg_out(58 downto 54) = "11011"
 			 else ex_mem_reg_out(74 downto 59);
 
-forwarded_m_to_e <= mem_wb_reg_out (15 downto 0) when mem_wb_reg_out(42 downto 38) = "11011" or id_ex_reg_out(103 downto 101) = "011"
-			 else mem_wb_reg_out(74 downto 59) when id_ex_reg_out(103 downto 101) = "001"
-			 else mem_wb_reg_out(58 downto 43) when id_ex_reg_out(103 downto 101) = "010"
-			 else mem_wb_reg_out(31 downto 16) when id_ex_reg_out(103 downto 101) = "100";
+forwarded_m_to_e <= mem_wb_reg_out (15 downto 0) when mem_wb_reg_out(42 downto 38) = "11011"
+			 else mem_wb_reg_out(74 downto 59);
+
 
 muxa	   : mux_4x1_16 port map(mux_a, rs_rd, forwarded_e_to_e, forwarded_m_to_e, rs_rd, a);
 muxb	   : mux_4x1_16 port map(mux_b, rt_imm,forwarded_e_to_e, forwarded_m_to_e, rt_imm, b);
@@ -329,11 +332,11 @@ ex_mem_reg_in(84) <= id_ex_reg_out(105);
 ex_mem_reg_in(85) <= id_ex_reg_out(106);
 ex_mem_reg_in(86) <= alu_br_taken;
 
-ex_mem_reg_reset <= '1' when rst_basedon_taken = '1'
-		else reset;
+ex_mem_reg_in_or_rst <= ex_mem_reg_in when rst_basedon_taken = '0'
+			else zerovec1; 
 
 -----------------------------------------------------------------------------------
-stage_ex_mem_reg	: stage_reg generic map (87) port map (Clk, ex_mem_reg_reset, '1', ex_mem_reg_in, ex_mem_reg_out);
+stage_ex_mem_reg	: stage_reg generic map (87) port map (Clk, reset, '1', ex_mem_reg_in_or_rst, ex_mem_reg_out);
 -----------------------------------------------------------------------------------
 --------------------------------------------------------------Mem stage Connections
 mux_ram_address      : mux_4x1_16 port map(ex_mem_reg_out(78 DOWNTO 77),mem_zero_vec,ex_mem_reg_out(15 DOWNTO 0),ex_mem_reg_out(47 DOWNTO 32),ex_mem_reg_out(74 DOWNTO 59),ram_address);
@@ -347,13 +350,15 @@ mem_br_taken <= mem_wb_reg_out(82);
 mem_new_pc <= mem_wb_reg_out(98 DOWNTO 83);
 mem_wb_reg_reset <= '1' when mem_wb_reg_out(82) = '1'
 		else reset;
+mem_wb_reg_in_or_rst <= mem_wb_reg_in when mem_br_taken = '0'
+			else zerovec2; 
 mem_ram_en <= '0' when mem_wb_reg_out(82) = '1'
 		else '1' when ex_mem_reg_out(76) = '0'
 		else ex_mem_reg_out(75);
 
 mem_wb_reg_in <= ram_data_out & mem_br_taken_en_reg & ex_mem_reg_out(85 DOWNTO 79) & ram_data_out & ex_mem_reg_out(74 DOWNTO 48) & ex_mem_reg_out(47 DOWNTO 32) & ex_mem_reg_out(15 DOWNTO 0);
 -----------------------------------------------------------------------------------
-stage_mem_wb_reg     : stage_reg generic map (99) port map (Clk, mem_wb_reg_reset, '1', mem_wb_reg_in , mem_wb_reg_out);
+stage_mem_wb_reg     : stage_reg generic map (99) port map (Clk, reset, '1', mem_wb_reg_in_or_rst , mem_wb_reg_out);
 -----------------------------------------------------------------------------------
 -------------------------------------------------------Write back stage connections
 mux_wb               : mux_8x1_16 port map(mem_wb_reg_out(78 DOWNTO 76),mem_zero_vec,mem_wb_reg_out(74 DOWNTO 59),mem_wb_reg_out(58 DOWNTO 43),mem_wb_reg_out(15 DOWNTO 0),mem_wb_reg_out(31 DOWNTO 16),in_port_buf_out,mem_zero_vec,mem_zero_vec,wb_data);
