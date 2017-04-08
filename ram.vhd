@@ -14,7 +14,7 @@ END ENTITY data_ram;
 
 ARCHITECTURE a_data_ram OF data_ram IS
 
-TYPE ram_type IS ARRAY(0 TO 1023) OF std_logic_vector(15 DOWNTO 0);
+TYPE ram_type IS ARRAY(0 TO 2047) OF std_logic_vector(15 DOWNTO 0);
 SIGNAL ram : ram_type;
 
 BEGIN
