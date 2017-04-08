@@ -51,7 +51,7 @@ END Component;
 
 Component mux_4x1_16 IS
 	PORT(	
-		sel : IN std_logic_vector(2 downto 0);
+		sel : IN std_logic_vector(1 downto 0);
             	x0,x1,x2,x3  : IN std_logic_vector(15 downto 0);
 		q : OUT std_logic_vector(15 downto 0));
 END Component;
@@ -60,6 +60,22 @@ COMPONENT source_selector IS
 	PORT( opcode: in std_logic_vector(4 downto 0);
 	      output: out std_logic);
 END COMPONENT;
+
+Component pc_selector IS
+	PORT(	inc_pc, alu_pc, mem_pc : IN std_logic_vector(15 DOWNTO 0);
+		alu_br_taken, mem_br_taken, intR, IF_int : IN std_logic;
+		output : OUT std_logic_vector(15 DOWNTO 0));
+END Component;
+
+Component pc_inc is
+    Port ( pc_in  : in  STD_LOGIC_VECTOR (15 downto 0);  
+           pc_out  : out STD_LOGIC_VECTOR (15 downto 0));
+end Component;
+Component instruction_mem IS
+	PORT(
+		address : IN  std_logic_vector(15 DOWNTO 0);
+		dataout : OUT std_logic_vector(31 DOWNTO 0));
+END Component instruction_mem;
 
 
 -----------------------------------------------------------------------------------
@@ -133,8 +149,8 @@ Begin
 --stage_ex_mem_reg	: stage_reg generic map (87) port map (Clk, , '1', ,ex_mem_reg_out);
 -----------------------------------------------------------------------------------
 --------------------------------------------------------------Mem stage Connections
--- mux_ram_address      : mux_4x1_16 port map(ram_address,mem_zero_vec,mem_ea,mem_rs_d,mem_alu_out,ram_address);
--- mem_data_ram         : data_ram port map(clk_mem,en,wr,address,datain,dataout)
+mux_ram_address      : mux_4x1_16 port map(ex_mem_reg_out(78 DOWNTO 77),mem_zero_vec,ex_mem_reg_out(15 DOWNTO 0),ex_mem_reg_out(47 DOWNTO 32),ex_mem_reg_out(74 DOWNTO 59),ram_address);
+mem_data_ram         : data_ram port map(clk_mem,mem_ram_en,ex_mem_reg_out(76),ram_address,ex_mem_reg_out(31 DOWNTO 16),ram_data_out);
 mem_new_pc_tri       : tri port map(mem_br_taken,ram_data_out,mem_new_pc);
 
 mem_br_taken <= '1' when ex_mem_reg_out(58 DOWNTO 54) = "11001" or ex_mem_reg_out(58 DOWNTO 54) = "11010"
@@ -142,6 +158,7 @@ mem_br_taken <= '1' when ex_mem_reg_out(58 DOWNTO 54) = "11001" or ex_mem_reg_ou
 mem_wb_reg_reset <= '1' when mem_wb_reg_out(82) = '1'
 		else reset;
 mem_ram_en <= '0' when mem_wb_reg_out(82) = '1'
+		else '1' when ex_mem_reg_out(76) = '0'
 		else ex_mem_reg_out(75);
 
 -----------------------------------------------------------------------------------

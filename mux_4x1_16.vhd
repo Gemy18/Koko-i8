@@ -2,7 +2,7 @@ LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
 
 ENTITY mux_4x1_16 IS
-	PORT(	sel : IN std_logic_vector(2 downto 0);
+	PORT(	sel : IN std_logic_vector(1 downto 0);
             x0,x1,x2,x3  : IN std_logic_vector(15 downto 0);
 		    q : OUT std_logic_vector(15 downto 0));
 END mux_4x1_16;
