@@ -313,11 +313,7 @@ br_opcode <= '1' when id_ex_reg_out(94 downto 90) = "10000" or id_ex_reg_out(94 
 	     else '0';
 alu_br_taken <= '1' when (br_opcode = '1' and alu_ex_out(0) = '1') or (id_ex_reg_out(94 downto 90) = "11000")
 		else '0';
-<<<<<<< Updated upstream
 rst_basedon_taken <= '1' when (alu_br_taken_out = '1' or mem_br_taken = '1')
-=======
-rst_basedon_taken <= '1' when (ex_mem_reg_out(86) = '1' or mem_br_taken = '1')
->>>>>>> Stashed changes
 		     else '0';
 
 ex_mem_reg_in(15 downto 0)  <= id_ex_reg_out(15 downto 0);
