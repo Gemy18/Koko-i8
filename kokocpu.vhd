@@ -128,8 +128,9 @@ Component control_unit IS
 END Component control_unit;
 
 Component stall_detector IS
-	PORT(	rs, rt, rd, ID_rd, read_en : IN std_logic_vector(2 DOWNTO 0);
+	PORT(	rs, rt, rd, ID_rd, read_en, ex_mem_rd : IN std_logic_vector(2 DOWNTO 0);
 		ID_load : IN std_logic;
+		op_code, ex_mem_op : IN std_logic_vector(4 DOWNTO 0);
 		output : OUT std_logic);
 END Component stall_detector;
 
