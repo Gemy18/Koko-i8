@@ -107,6 +107,12 @@ Component control_unit IS
 		in_en, out_en, sp_select, ld : OUT std_logic);
 END Component control_unit;
 
+Component stall_detector IS
+	PORT(	rs, rt, rd, ID_rd, read_en : IN std_logic_vector(2 DOWNTO 0);
+		ID_load : IN std_logic;
+		output : OUT std_logic);
+END Component stall_detector;
+
 -----------------------------------------------------------------------------------
 -------------------------------END-Components--------------------------------------
 -----------------------------------------------------------------------------------
@@ -211,6 +217,9 @@ br_taken <= (mem_br_taken or alu_br_taken);
 
 rs_selected <= "110" when sp_select = '1'
 		else IF_ID_reg_out(26 downto 24);
+
+stall_detector_port : stall_detector port map (rs_selected, IF_ID_reg_out(23 downto 21), 
+	IF_ID_reg_out(20 downto 18), id_ex_reg_out(88 downto 86), read_en, id_ex_reg_out(107), stall_sig);
 
 REGFILE_port : REGFILE port map (clk_reg_file, reset, rs_data, rt_data, rd_data, wb_en, wb_add,
  wb_data, rs_selected, IF_ID_reg_out(23 downto 21), IF_ID_reg_out(20 downto 18));
