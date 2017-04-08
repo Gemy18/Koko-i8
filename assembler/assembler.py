@@ -101,8 +101,9 @@ def omer_magdy(filename,out1,out2):
             s=abdullah(line)
             if s==-1:
                 continue
-            dic2[instruction]=''.join(list(s)[16:])
-            dic2[instruction+1] = ''.join(list(s)[0:16])
+            dic2[instruction] = ''.join(list(s)[0:16])
+            dic2[instruction+1]=''.join(list(s)[16:])
+
             instruction+=2
         w1 = open(out1, 'w')
         w2 = open(out2, 'w')
