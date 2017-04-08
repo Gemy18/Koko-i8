@@ -1,31 +1,5 @@
 # Loading project cpu
 # Compile of alu.vhd was successful.
-# Compile of alu_bak.vhd was successful.
-# Compile of dec_2_x_4.vhd was successful.
-# Compile of dec_3_x_8.vhd was successful.
-# Compile of dec_4_x_16.vhd was successful.
-# Compile of dec_5_x_32.vhd was successful.
-# Compile of mux_2x1_1.vhd was successful.
-# Compile of mux_2x1_2.vhd was successful.
-# Compile of mux_2x1_5.vhd was successful.
-# Compile of mux_2x1_16.vhd was successful.
-# Compile of mux_8x1_16.vhd was successful.
-# Compile of my_adder.vhd was successful.
-# Compile of my_n_adder.vhd was successful.
-# Compile of or.vhd was successful.
-# Compile of ram.vhd was successful.
-# Compile of reg_file.vhd was successful.
-# Compile of register.vhd was successful.
-# Compile of tri_state_buffer.vhd was successful.
-# Compile of full_adder.vhd was successful.
-# Compile of generic_adder.vhd was successful.
-# Compile of kokocpu.vhd failed with 2 errors.
-# Compile of stage_reg.vhd was successful.
-# Compile of forwarding_unit.vhd was successful.
-# Compile of source_selector.vhd was successful.
-# 24 compiles, 1 failed with 2 errors.
-# Compile of alu.vhd was successful.
-# Compile of alu_bak.vhd was successful.
 # Compile of dec_2_x_4.vhd was successful.
 # Compile of dec_3_x_8.vhd was successful.
 # Compile of dec_4_x_16.vhd was successful.
@@ -48,4 +22,30 @@
 # Compile of stage_reg.vhd was successful.
 # Compile of forwarding_unit.vhd was successful.
 # Compile of source_selector.vhd was successful.
+# Compile of mux_4x1_16.vhd was successful.
+# 24 compiles, 0 failed with no errors.
+# Compile of alu.vhd was successful.
+# Compile of dec_2_x_4.vhd was successful.
+# Compile of dec_3_x_8.vhd was successful.
+# Compile of dec_4_x_16.vhd was successful.
+# Compile of dec_5_x_32.vhd was successful.
+# Compile of mux_2x1_1.vhd was successful.
+# Compile of mux_2x1_2.vhd was successful.
+# Compile of mux_2x1_5.vhd was successful.
+# Compile of mux_2x1_16.vhd was successful.
+# Compile of mux_8x1_16.vhd was successful.
+# Compile of my_adder.vhd was successful.
+# Compile of my_n_adder.vhd was successful.
+# Compile of or.vhd was successful.
+# Compile of ram.vhd was successful.
+# Compile of reg_file.vhd was successful.
+# Compile of register.vhd was successful.
+# Compile of tri_state_buffer.vhd was successful.
+# Compile of full_adder.vhd was successful.
+# Compile of generic_adder.vhd was successful.
+# Compile of kokocpu.vhd was successful.
+# Compile of stage_reg.vhd was successful.
+# Compile of forwarding_unit.vhd was successful.
+# Compile of source_selector.vhd was successful.
+# Compile of mux_4x1_16.vhd was successful.
 # 24 compiles, 0 failed with no errors.

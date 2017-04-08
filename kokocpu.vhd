@@ -173,6 +173,9 @@ SIGNAL a,b : std_logic_vector(15 DOWNTO 0);
 SIGNAL flags_in, flags_out, flags_old_out, to_flags : std_logic_vector (3 DOWNTO 0);
 
 SIGNAL ex_mem_reg_in : std_logic_vector(86 DOWNTO 0);
+
+SIGNAL forwarded_e_to_e : std_logic_vector(15 DOWNTO 0);
+SIGNAL forwarded_m_to_e : std_logic_vector(15 DOWNTO 0);
 -----------------------------------------------------------------------------------
 ------------------------------------------------------------------Mem Stage signals
 
@@ -279,8 +282,16 @@ forwarding : forwarding_unit port map (id_ex_reg_out(88 downto 86), id_ex_reg_ou
 
 mux_rs_rd  : mux_2x1_16 port map(selector_output, id_ex_reg_out(79 downto 64), id_ex_reg_out(47 downto 32), rs_rd);
 mux_rt_imm : mux_2x1_16 port map(selector_output, id_ex_reg_out(63 downto 48), id_ex_reg_out(15 downto 0), rt_imm);
-muxa	   : mux_4x1_16 port map(mux_a, rs_rd,ex_mem_reg_out(74 downto 59),mem_wb_reg_out(74 downto 59),rs_rd, a);
-muxb	   : mux_4x1_16 port map(mux_b, rt_imm,ex_mem_reg_out(74 downto 59),mem_wb_reg_out(74 downto 59),rt_imm, b);
+
+forwarded_e_to_e <= ex_mem_reg_out (15 downto 0) when id_ex_reg_out(94 downto 90) = "11011"
+			 else ex_mem_reg_out(74 downto 59);
+
+forwarded_m_to_e <= mem_wb_reg_out (15 downto 0) when id_ex_reg_out(94 downto 90) = "11011"
+			 else mem_wb_reg_out(74 downto 59);
+
+
+muxa	   : mux_4x1_16 port map(mux_a, rs_rd, forwarded_e_to_e, forwarded_m_to_e, rs_rd, a);
+muxb	   : mux_4x1_16 port map(mux_b, rt_imm,forwarded_e_to_e, forwarded_m_to_e, rt_imm, b);
 
 alu_new_pc <= ex_mem_reg_out(31 downto 16);	--ask if this is correct and not id_ex_reg_out.
 alu1	   : alu port map(a,b, id_ex_reg_out(94 downto 90), id_ex_reg_out(89), flags_out(3), flags_out(2), flags_out(1), flags_out(0), alu_ex_out, flags_in(3), flags_in(2), flags_in(1), flags_in(0));
