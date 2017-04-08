@@ -289,14 +289,14 @@ flags_current : stage_reg generic map (4) port map (Clk, reset, '1', to_flags, f
 
 br_opcode <= '1' when id_ex_reg_out(94 downto 90) = "10000" or id_ex_reg_out(94 downto 90) = "10001" or id_ex_reg_out(94 downto 90) = "10010" or id_ex_reg_out(94 downto 90) = "10011"
 	     else '0';
-alu_br_taken <= '1' when br_opcode = '1' and alu_ex_out(0) = '1'
+alu_br_taken <= '1' when (br_opcode = '1' and alu_ex_out(0) = '1') or (id_ex_reg_out(94 downto 90) = "11000"))
 		else '0';
 rst_basedon_taken <= '1' when (ex_mem_reg_in(86) = '1' or mem_br_taken = '1')
 		     else '0';
 
 ex_mem_reg_in(15 downto 0)  <= id_ex_reg_out(15 downto 0);
 ex_mem_reg_in(31 downto 16) <= id_ex_reg_out(47 downto 32);
-ex_mem_reg_in(47 downto 32) <= id_ex_reg_out(63 downto 48);
+ex_mem_reg_in(47 downto 32) <= id_ex_reg_out(79 downto 64);
 ex_mem_reg_in(50 downto 48) <= id_ex_reg_out(82 downto 80);
 ex_mem_reg_in(53 downto 51) <= id_ex_reg_out(88 downto 86);
 ex_mem_reg_in(58 downto 54) <= id_ex_reg_out(94 downto 90);
