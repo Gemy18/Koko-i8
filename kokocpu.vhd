@@ -84,6 +84,28 @@ Component reg IS
 		  q : OUT std_logic_vector(15 DOWNTO 0));
 END Component reg;
 
+Component REGFILE is 
+port(clk , rst: in std_logic;
+rsdata : out std_logic_vector(15 downto 0);
+rtdata : out std_logic_vector(15 downto 0);
+rdata : out std_logic_vector(15 downto 0);
+write_en: in std_logic ;
+write_back_add:  std_logic_vector(2 downto 0);
+write_back_data: std_logic_vector(15 downto 0);
+rs:  std_logic_vector(2 downto 0);
+rt:  std_logic_vector(2 downto 0);
+rd:  std_logic_vector(2 downto 0));
+end Component REGFILE;
+
+Component control_unit IS
+	PORT(	op : IN std_logic_vector(4 DOWNTO 0);
+		stall, IF_int, br_taken : IN std_logic;
+		wb : OUT std_logic_vector(4 DOWNTO 0);
+		ram : OUT std_logic_vector(3 DOWNTO 0);
+		alu : OUT std_logic_vector(1 DOWNTO 0);
+		read_en : OUT std_logic_vector(2 DOWNTO 0);
+		in_en, out_en, sp_select, ld : OUT std_logic);
+END Component control_unit;
 
 -----------------------------------------------------------------------------------
 -------------------------------END-Components--------------------------------------
@@ -104,6 +126,11 @@ SIGNAL stall_sig, pc_en : std_logic;
 ---------------------------------------------------------------decode Stage signals
 
 SIGNAL IF_ID_reg_out, IF_ID_reg_in : std_logic_vector(49 DOWNTO 0);
+
+SIGNAL rs_data, rt_data, rd_data, wb_data : std_logic_vector(15 downto 0);
+SIGNAL wb_add, read_en : std_logic_vector(2 downto 0);
+SIGNAL wb_en, br_taken, sp_select : std_logic;
+SIGNAL alu_signals : std_logic_vector(1 downto 0);
 
 -----------------------------------------------------------------------------------
 --------------------------------------------------------------Execute Stage signals
@@ -180,6 +207,26 @@ stage_IF_ID_reg	: stage_reg generic map (50) port map (Clk, reset, pc_en, IF_ID_
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------Decode stage Connections
 
+br_taken <= (mem_br_taken or alu_br_taken);
+
+REGFILE_port : REGFILE port map (clk_reg_file, reset, rs_data, rt_data, rd_data, wb_en, wb_add,
+ wb_data, IF_ID_reg_out(26 downto 24), IF_ID_reg_out(23 downto 21), IF_ID_reg_out(20 downto 18));
+
+control_unit_port : control_unit port map (IF_ID_reg_out(31 downto 27), stall_sig,
+	 IF_ID_reg_out(49), br_taken, id_ex_reg_in(104 downto 100), id_ex_reg_in(99 downto 96), 
+	alu_signals, read_en, id_ex_reg_in(105), id_ex_reg_in(106), sp_select, id_ex_reg_in(107));
+
+id_ex_reg_in(89) <= alu_signals(0);
+id_ex_reg_in(94 downto 90) <= IF_ID_reg_out(31 downto 27);
+id_ex_reg_in(95) <= alu_signals(1);
+id_ex_reg_in(15 downto 0) <= IF_ID_reg_out(15 downto 0);
+id_ex_reg_in(31 downto 16) <= IF_ID_reg_out(47 downto 32);
+id_ex_reg_in(47 downto 32) <= rd_data;
+id_ex_reg_in(63 downto 48) <= rt_data;
+id_ex_reg_in(79 downto 64) <= rs_data;
+id_ex_reg_in(82 downto 80) <= IF_ID_reg_out(26 downto 24);
+id_ex_reg_in(85 downto 83) <= IF_ID_reg_out(23 downto 21);
+id_ex_reg_in(88 downto 86) <= IF_ID_reg_out(20 downto 18);
 
 -----------------------------------------------------------------------------------
 stage_id_ex_reg	: stage_reg generic map (108) port map (Clk, reset, '1', id_ex_reg_in, id_ex_reg_out);
