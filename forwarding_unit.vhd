@@ -12,12 +12,12 @@ ARCHITECTURE a_forwarding_unit OF forwarding_unit IS
 	BEGIN
 
 	--Execute stage forwarding.
-	mux1_ex_s <= "10" when mem_wb = '1' and ((source_selector ='0' and id_rs = mem_rd) or (source_selector ='1' and id_rd = mem_rd))
-		  else "01" when ex_wb = '1' and((source_selector='0' and id_rs = ex_rd) or (source_selector ='1' and id_rd = ex_rd))
+	mux1_ex_s <= "01" when ex_wb = '1' and((source_selector='0' and id_rs = ex_rd) or (source_selector ='1' and id_rd = ex_rd))  --priority is to execute stage
+		  else "10" when mem_wb = '1' and ((source_selector ='0' and id_rs = mem_rd) or (source_selector ='1' and id_rd = mem_rd))
 		  else "00";
 	
-	mux2_ex_s <= "10" when  mem_wb = '1' and (source_selector ='0' and id_rt = mem_rd)
-		  else "01" when ex_wb = '1' and (source_selector='0' and id_rt = ex_rd)
+	mux2_ex_s <= "01" when ex_wb = '1' and (source_selector='0' and id_rt = ex_rd)
+		  else "10" when  mem_wb = '1' and (source_selector ='0' and id_rt = mem_rd)
 		  else "00";
 
 	--Memory stage forwarding.
