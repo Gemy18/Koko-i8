@@ -1,16 +1,14 @@
-LDD R1,3  ;R1=40
-LDD R2,4  ;R2=50
-ADD R1,R2,r2 ;R1=90
-STD R1,4  ;M[4]=90
-Push R2   ;M[255]=50  Sp=254
-Push R1   ;M[254]=90  Sp=253
-LDD R1,0  ;R1=10
-LDD R2,1  ;R2=20
-ADD R1,R2,r2 ;R1=30
-Pop R1    ;R1=90
-pop R2    ;R2=50
-
-.100
-RTI
+LDM r0, 5
+LDM r1, 10
+add r0, r1, r2
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
 
 
