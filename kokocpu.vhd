@@ -128,7 +128,7 @@ Component control_unit IS
 END Component control_unit;
 
 Component stall_detector IS
-	PORT(	rs, rt, rd, ID_rd, read_en, ex_mem_rd : IN std_logic_vector(2 DOWNTO 0);
+	PORT(	rs, rt, rd, ID_rd, read_en, ex_mem_rd, id_ex_rd : IN std_logic_vector(2 DOWNTO 0);
 		ID_load : IN std_logic;
 		op_code, ex_mem_op : IN std_logic_vector(4 DOWNTO 0);
 		output : OUT std_logic);
@@ -243,7 +243,7 @@ rt <= IF_ID_reg_out(23 downto 21);
 rd <= IF_ID_reg_out(20 downto 18);
 
 stall_detector_port : stall_detector port map (rs_selected, rt, rd, id_ex_reg_out(88 downto 86), 
-	read_en, ex_mem_reg_out(50 downto 48), id_ex_reg_out(107), op_signal, ex_mem_reg_out(58 downto 54), stall_sig);
+	read_en, ex_mem_reg_out(50 downto 48), id_ex_reg_out(82 downto 80), id_ex_reg_out(107), op_signal, ex_mem_reg_out(58 downto 54), stall_sig);
 
 REGFILE_port : REGFILE port map (clk_reg_file, reset, rs_data, rt_data, rd_data, r0, r1, r2, r3, r4, r5, r6, wb_en, wb_add,
  	wb_data, rs_selected, rt, rd);
@@ -256,15 +256,15 @@ control_unit_port : control_unit port map (op_signal, stall_sig, IF_ID_reg_out(4
 id_ex_reg_in(107) <= ld_signal;
 id_ex_reg_in(106) <= out_en_signal;
 id_ex_reg_in(105) <= in_en_signal;
-id_ex_reg_in(104 downto 100) <= wb_signals;
+id_ex_reg_in(104 downto 100) <= "01000" when op_signal = "01010" else wb_signals;
 id_ex_reg_in(99 downto 96) <= ram_signals;
 id_ex_reg_in(95) <= alu_signals(1);
 id_ex_reg_in(94 downto 90) <= op_signal;
 id_ex_reg_in(89) <= alu_signals(0);
 id_ex_reg_in(88 downto 86) <= rs_selected;
 id_ex_reg_in(85 downto 83) <= rt;
-id_ex_reg_in(82 downto 80) <= rd;
-id_ex_reg_in(79 downto 64) <= rs_data;
+id_ex_reg_in(82 downto 80) <= rd when stall_sig = '0' else "111";
+id_ex_reg_in(79 downto 64) <= rd_data when op_signal = "01010" else rs_data ;
 id_ex_reg_in(63 downto 48) <= rt_data;
 id_ex_reg_in(47 downto 32) <= rd_data when IF_ID_reg_out(49) = '0' else pc_signal;
 id_ex_reg_in(31 downto 16) <= pc_signal;

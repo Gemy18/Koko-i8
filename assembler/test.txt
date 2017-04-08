@@ -1,3 +1,7 @@
-ldm r0, 5
-std r0, 0
+ldm r0, 7
+nop
+not r0
+inc r0
+out r0
+in r1
 
