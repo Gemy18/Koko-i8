@@ -1257,3 +1257,386 @@ quit -sim
 # Compile of register.vhd was successful.
 # Compile of tri_state_buffer.vhd was successful.
 # 29 compiles, 0 failed with no errors.
+do mostafa_do.do
+# vsim work.koko_micro 
+# Start time: 22:02:11 on Apr 08,2017
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading work.koko_micro(a_koko_micro)
+# Loading work.reg(a_reg)
+# Loading ieee.numeric_std(body)
+# Loading work.instruction_mem(a_instruction_mem)
+# Loading work.pc_inc(a_pc_inc)
+# Loading work.generic_nadder(a_my_nadder)
+# Loading work.full_adder(my_adder)
+# Loading work.pc_selector(a_pc_selector)
+# Loading work.stage_reg(a_stage_reg)
+# Loading work.stall_detector(a_stall_detector)
+# Loading ieee.std_logic_arith(body)
+# Loading ieee.std_logic_unsigned(body)
+# Loading work.regfile(a_regfile)
+# Loading work.dec_3_x_8(a_dec_3_x_8)
+# Loading work.control_unit(a_control_unit)
+# Loading work.source_selector(a_source_selector)
+# Loading work.forwarding_unit(a_forwarding_unit)
+# Loading work.mux_2x1_16(a_mux_2x1_16)
+# Loading work.mux_4x1_16(a_mux_4x1_16)
+# Loading work.alu(struct)
+# Loading work.data_ram(a_data_ram)
+# Loading work.mux_8x1_16(a_mux_8x1_16)
+# Loading work.tri(a_tri)
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/mem_data_ram
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/REGFILE_port
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/instruction_mem_port
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ps  Iteration: 0  Instance: /koko_micro/instruction_mem_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /koko_micro/REGFILE_port
+run
+run
+run
+run
+run
+run
+run
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+run
+# ** Error (suppressible): (vsim-3601) Iteration limit 5000 reached at time 1 ns.
+quit -sim
+# End time: 22:04:18 on Apr 08,2017, Elapsed time: 0:02:07
+# Errors: 67, Warnings: 45
+# Compile of alu.vhd was successful.
+# Compile of control_unit.vhd was successful.
+# Compile of generic_adder.vhd was successful.
+# Compile of dec_4_x_16.vhd was successful.
+# Compile of forwarding_unit.vhd was successful.
+# Compile of instruction_mem.vhd was successful.
+# Compile of dec_3_x_8.vhd was successful.
+# Compile of dec_5_x_32.vhd was successful.
+# Compile of full_adder.vhd was successful.
+# Compile of dec_2_x_4.vhd was successful.
+# Compile of or.vhd was successful.
+# Compile of mux_2x1_5.vhd was successful.
+# Compile of mux_8x1_16.vhd was successful.
+# Compile of mux_2x1_2.vhd was successful.
+# Compile of kokocpu.vhd was successful.
+# Compile of mux_2x1_1.vhd was successful.
+# Compile of mux_4x1_16.vhd was successful.
+# Compile of pc_inc.vhd was successful.
+# Compile of mux_2x1_16.vhd was successful.
+# Compile of my_n_adder.vhd was successful.
+# Compile of my_adder.vhd was successful.
+# Compile of pc_selector.vhd was successful.
+# Compile of stall_detector.vhd was successful.
+# Compile of reg_file.vhd was successful.
+# Compile of stage_reg.vhd was successful.
+# Compile of source_selector.vhd was successful.
+# Compile of ram.vhd was successful.
+# Compile of register.vhd was successful.
+# Compile of tri_state_buffer.vhd was successful.
+# 29 compiles, 0 failed with no errors.
+# Compile of dec_4_x_16.vhd was successful.
+# Compile of generic_adder.vhd was successful.
+# Compile of pc_selector.vhd was successful.
+# Compile of alu.vhd was successful.
+# Compile of forwarding_unit.vhd was successful.
+# Compile of stall_detector.vhd was successful.
+# Compile of or.vhd was successful.
+# Compile of instruction_mem.vhd was successful.
+# Compile of control_unit.vhd was successful.
+# Compile of mux_8x1_16.vhd was successful.
+# Compile of mux_2x1_5.vhd was successful.
+# Compile of mux_2x1_2.vhd was successful.
+# Compile of reg_file.vhd was successful.
+# Compile of pc_inc.vhd was successful.
+# Compile of mux_4x1_16.vhd was successful.
+# Compile of mux_2x1_1.vhd was successful.
+# Compile of dec_3_x_8.vhd was successful.
+# Compile of kokocpu.vhd was successful.
+# Compile of dec_5_x_32.vhd was successful.
+# Compile of mux_2x1_16.vhd was successful.
+# Compile of my_n_adder.vhd was successful.
+# Compile of full_adder.vhd was successful.
+# Compile of stage_reg.vhd was successful.
+# Compile of source_selector.vhd was successful.
+# Compile of ram.vhd was successful.
+# Compile of tri_state_buffer.vhd was successful.
+# Compile of dec_2_x_4.vhd was successful.
+# Compile of my_adder.vhd was successful.
+# Compile of register.vhd was successful.
+# 29 compiles, 0 failed with no errors.
+# Compile of dec_4_x_16.vhd was successful.
+# Compile of generic_adder.vhd was successful.
+# Compile of pc_selector.vhd was successful.
+# Compile of alu.vhd was successful.
+# Compile of forwarding_unit.vhd was successful.
+# Compile of stall_detector.vhd was successful.
+# Compile of or.vhd was successful.
+# Compile of instruction_mem.vhd was successful.
+# Compile of control_unit.vhd was successful.
+# Compile of mux_8x1_16.vhd was successful.
+# Compile of mux_2x1_5.vhd was successful.
+# Compile of mux_2x1_2.vhd was successful.
+# Compile of reg_file.vhd was successful.
+# Compile of pc_inc.vhd was successful.
+# Compile of mux_4x1_16.vhd was successful.
+# Compile of mux_2x1_1.vhd was successful.
+# Compile of dec_3_x_8.vhd was successful.
+# Compile of kokocpu.vhd was successful.
+# Compile of dec_5_x_32.vhd was successful.
+# Compile of mux_2x1_16.vhd was successful.
+# Compile of my_n_adder.vhd was successful.
+# Compile of full_adder.vhd was successful.
+# Compile of stage_reg.vhd was successful.
+# Compile of source_selector.vhd was successful.
+# Compile of ram.vhd was successful.
+# Compile of tri_state_buffer.vhd was successful.
+# Compile of dec_2_x_4.vhd was successful.
+# Compile of my_adder.vhd was successful.
+# Compile of register.vhd was successful.
+# 29 compiles, 0 failed with no errors.
+# Compile of dec_4_x_16.vhd was successful.
+# Compile of generic_adder.vhd was successful.
+# Compile of pc_selector.vhd was successful.
+# Compile of alu.vhd was successful.
+# Compile of forwarding_unit.vhd was successful.
+# Compile of stall_detector.vhd was successful.
+# Compile of or.vhd was successful.
+# Compile of instruction_mem.vhd was successful.
+# Compile of control_unit.vhd was successful.
+# Compile of mux_8x1_16.vhd was successful.
+# Compile of mux_2x1_5.vhd was successful.
+# Compile of mux_2x1_2.vhd was successful.
+# Compile of reg_file.vhd was successful.
+# Compile of pc_inc.vhd was successful.
+# Compile of mux_4x1_16.vhd was successful.
+# Compile of mux_2x1_1.vhd was successful.
+# Compile of dec_3_x_8.vhd was successful.
+# Compile of kokocpu.vhd was successful.
+# Compile of dec_5_x_32.vhd was successful.
+# Compile of mux_2x1_16.vhd was successful.
+# Compile of my_n_adder.vhd was successful.
+# Compile of full_adder.vhd was successful.
+# Compile of stage_reg.vhd was successful.
+# Compile of source_selector.vhd was successful.
+# Compile of ram.vhd was successful.
+# Compile of tri_state_buffer.vhd was successful.
+# Compile of dec_2_x_4.vhd was successful.
+# Compile of my_adder.vhd was successful.
+# Compile of register.vhd was successful.
+# 29 compiles, 0 failed with no errors.

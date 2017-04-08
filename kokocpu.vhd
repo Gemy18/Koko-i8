@@ -169,7 +169,7 @@ SIGNAL ram_signals : std_logic_vector(3 downto 0);
 
 SIGNAL id_ex_reg_out, id_ex_reg_in : std_logic_vector(107 DOWNTO 0);
 
-SIGNAL alu_br_taken, selector_output, rst_basedon_taken, br_opcode, ex_mem_reg_reset: std_logic;
+SIGNAL alu_br_taken, alu_br_taken_out, selector_output, rst_basedon_taken, br_opcode, ex_mem_reg_reset: std_logic;
 SIGNAL rs_rd, alu_new_pc : std_logic_vector(15 DOWNTO 0);
 SIGNAL rt_imm, alu_ex_out : std_logic_vector(15 DOWNTO 0);
 SIGNAL mux_a, mux_b : std_logic_vector(1 DOWNTO 0);
@@ -313,7 +313,7 @@ br_opcode <= '1' when id_ex_reg_out(94 downto 90) = "10000" or id_ex_reg_out(94 
 	     else '0';
 alu_br_taken <= '1' when (br_opcode = '1' and alu_ex_out(0) = '1') or (id_ex_reg_out(94 downto 90) = "11000")
 		else '0';
-rst_basedon_taken <= '1' when (ex_mem_reg_in(86) = '1' or mem_br_taken = '1')
+rst_basedon_taken <= '1' when (alu_br_taken_out = '1' or mem_br_taken = '1')
 		     else '0';
 
 ex_mem_reg_in(15 downto 0)  <= id_ex_reg_out(15 downto 0);
@@ -332,6 +332,8 @@ ex_mem_reg_in(83) <= id_ex_reg_out(104);
 ex_mem_reg_in(84) <= id_ex_reg_out(105);
 ex_mem_reg_in(85) <= id_ex_reg_out(106);
 ex_mem_reg_in(86) <= alu_br_taken;
+
+alu_br_taken_out <= ex_mem_reg_out(86);
 
 ex_mem_reg_in_or_rst <= ex_mem_reg_in when rst_basedon_taken = '0'
 			else zerovec1; 
