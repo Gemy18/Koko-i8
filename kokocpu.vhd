@@ -214,7 +214,10 @@ SIGNAL in_port_buf_out : std_logic_vector(15 DOWNTO 0);
 -----------------------------------------------------------------------------------
 
 Begin
+
+-----------------------------------------------------------------------------------
 ------------------------------------------------------------Fetch stage Connections
+
 pc_en <= not stall_sig;
 pc_reg	: reg port map (clk, reset, pc_en, pc_input, pc_output);
 instruction_mem_port	: instruction_mem port map (pc_output, ir);
