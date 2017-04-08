@@ -26,6 +26,5 @@ BEGIN
 				END IF;
 			END IF;
 	END PROCESS;
-	dataout <= ram(to_integer(unsigned(address))) when en='1'
-	else "ZZZZZZZZZZZZZZZZ";
+	dataout <= ram(to_integer(unsigned(address)));
 END a_data_ram;

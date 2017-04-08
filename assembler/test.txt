@@ -1,13 +1,13 @@
-<<<<<<< HEAD
-ldm r0 ,5
-ldm r1,10
-add r0,r1,r2
-.100
-RTI
-=======
-LDM r0, 5
-LDM r1, 10
-add r0, r1, r2
+ldm r0, 5
+ldm r1, 10
+nop
+nop
+nop
+nop
+nop
+nop
+std r0, 0
+std r1, 1
 nop
 nop
 nop
@@ -15,8 +15,7 @@ nop
 nop
 nop
 nop
+ldd r2, 0
+ldd r3, 1
 nop
-nop
->>>>>>> e34bc1982c263379a41597ba5d536d9630487390
-
 

@@ -146,7 +146,7 @@ ARCHITECTURE a_control_unit OF control_unit IS
 				in_en <= '0';	out_en <= '0';	ld <= '0';
 
 			ElSIF op = "11100" then	
-				wb <= "10101";
+				wb <= "10011";
 				ram <= "0101";
 				alu <= "00";
 				read_en <= "000";

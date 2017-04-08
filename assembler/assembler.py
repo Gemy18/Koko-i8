@@ -43,7 +43,7 @@ def abdullah(ins):
     lis=ins.split()
     if (lis[0][0])==';':
         return -1
-    out=list("00000000000000000000000000000000")
+    out=list("11111111111111111111111111111111")
     if lis[0]== "mov":
         out[5:8]=list(karem[lis[1]])
         out[11:14] = list(karem[lis[2]])
@@ -70,7 +70,11 @@ def omer_magdy(filename,out1,out2):
     dic2={}
     for i in range(1024):
         dic1[i]=  "0000000000000000"
-        dic2[i] = "0000000000000000"
+        if i%2==0:
+            dic2[i] = "0000011111111111"
+        else :
+            dic2[i] = "1111111111111111"
+            
     data=0
     instruction=0
     new=-1
@@ -107,6 +111,14 @@ def omer_magdy(filename,out1,out2):
             instruction+=2
         w1 = open(out1, 'w')
         w2 = open(out2, 'w')
+        w1.write('''// memory data file (do not edit the following line - required for mem load use)
+// instance=/koko_micro/instruction_mem_port/instruction_mem
+// format=mti addressradix=d dataradix=b version=1.0 wordsperline=1''')
+        w1.write('\n')
+        w2.write('''// memory data file (do not edit the following line - required for mem load use)
+// instance=/koko_micro/instruction_mem_port/instruction_mem
+// format=mti addressradix=d dataradix=b version=1.0 wordsperline=1''')
+        w2.write('\n')
         for i in range(1024):
             w1.write(str(i)+": "+str(dic1[i]))
             w2.write(str(i) + ": "+str( dic2[i]))
@@ -114,4 +126,4 @@ def omer_magdy(filename,out1,out2):
             w2.write(('\n'))
 
             # loop and print the mem
-omer_magdy("test.txt","data","ins")
+omer_magdy("test.txt","../test_ram.mem","../test_ins.mem")

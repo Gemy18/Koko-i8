@@ -184,14 +184,12 @@ SIGNAL mem_wb_reg_reset : std_logic;
 
 -- ram signals
 SIGNAL mem_ram_en : std_logic;
-SIGNAL mem_ram_wr : std_logic;
 SIGNAL ram_address : std_logic_vector(15 DOWNTO 0);
 SIGNAL ram_data_out: std_logic_vector(15 DOWNTO 0);
 
 SIGNAL mem_zero_vec: std_logic_vector(15 DOWNTO 0);
 
 SIGNAL mem_new_pc : std_logic_vector(15 DOWNTO 0);
-SIGNAL mem_new_pc_reg : std_logic_vector(15 DOWNTO 0);
 SIGNAL mem_br_taken_en_reg : std_logic;
 SIGNAL mem_br_taken : std_logic;
 
@@ -334,7 +332,6 @@ stage_ex_mem_reg	: stage_reg generic map (87) port map (Clk, ex_mem_reg_reset, '
 --------------------------------------------------------------Mem stage Connections
 mux_ram_address      : mux_4x1_16 port map(ex_mem_reg_out(78 DOWNTO 77),mem_zero_vec,ex_mem_reg_out(15 DOWNTO 0),ex_mem_reg_out(47 DOWNTO 32),ex_mem_reg_out(74 DOWNTO 59),ram_address);
 mem_data_ram         : data_ram port map(clk_mem,mem_ram_en,ex_mem_reg_out(76),ram_address,ex_mem_reg_out(31 DOWNTO 16),ram_data_out);
-mem_new_pc_tri       : tri port map(mem_br_taken,ram_data_out,mem_new_pc_reg);
 
 mem_br_taken_en_reg <= '1' when ex_mem_reg_out(58 DOWNTO 54) = "11001" or ex_mem_reg_out(58 DOWNTO 54) = "11010"
 	   else '0';
@@ -346,7 +343,7 @@ mem_ram_en <= '0' when mem_wb_reg_out(82) = '1'
 		else '1' when ex_mem_reg_out(76) = '0'
 		else ex_mem_reg_out(75);
 
-mem_wb_reg_in <= mem_new_pc_reg & mem_br_taken_en_reg & ex_mem_reg_out(85 DOWNTO 79) & ram_data_out & ex_mem_reg_out(74 DOWNTO 48) & ex_mem_reg_out(47 DOWNTO 32) & ex_mem_reg_out(15 DOWNTO 0);
+mem_wb_reg_in <= ram_data_out & mem_br_taken_en_reg & ex_mem_reg_out(85 DOWNTO 79) & ram_data_out & ex_mem_reg_out(74 DOWNTO 48) & ex_mem_reg_out(47 DOWNTO 32) & ex_mem_reg_out(15 DOWNTO 0);
 -----------------------------------------------------------------------------------
 stage_mem_wb_reg     : stage_reg generic map (99) port map (Clk, mem_wb_reg_reset, '1', mem_wb_reg_in , mem_wb_reg_out);
 -----------------------------------------------------------------------------------

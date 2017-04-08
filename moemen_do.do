@@ -91,12 +91,10 @@ sim:/koko_micro/ex_mem_reg_in \
 sim:/koko_micro/ex_mem_reg_out \
 sim:/koko_micro/mem_wb_reg_reset \
 sim:/koko_micro/mem_ram_en \
-sim:/koko_micro/mem_ram_wr \
 sim:/koko_micro/ram_address \
 sim:/koko_micro/ram_data_out \
 sim:/koko_micro/mem_zero_vec \
 sim:/koko_micro/mem_new_pc \
-sim:/koko_micro/mem_new_pc_reg \
 sim:/koko_micro/mem_br_taken_en_reg \
 sim:/koko_micro/mem_br_taken \
 sim:/koko_micro/mem_wb_reg_in \
@@ -107,7 +105,8 @@ sim:/koko_micro/wb_add \
 sim:/koko_micro/in_port_en \
 sim:/koko_micro/out_port_en \
 sim:/koko_micro/in_port_buf_out
-mem load -i /home/moemen/CMP/Koko-i8/test1.mem /koko_micro/instruction_mem_port/instruction_mem
+mem load -i /home/moemen/CMP/Koko-i8/test_ins.mem /koko_micro/instruction_mem_port/instruction_mem
+mem load -i /home/moemen/CMP/Koko-i8/test_ram.mem /koko_micro/mem_data_ram/ram
 force -freeze sim:/koko_micro/reset 1 0
 force -freeze sim:/koko_micro/int_r 0 0
 force -freeze sim:/koko_micro/in_port 16'h0000 0
