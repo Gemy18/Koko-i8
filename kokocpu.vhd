@@ -161,15 +161,7 @@ SIGNAL out_port_en : std_logic;
 -------------------------------Connections-----------------------------------------
 -----------------------------------------------------------------------------------
 Begin
------------------------------------------------------------------------------------
---stage_id_ex_reg	: stage_reg generic map (87) port map (Clk, , '1', ,id_ex_reg_out);
------------------------------------------------------------------------------------
-s_selector : source_selector port map(id_ex_reg_out(94 downto 90),selector_output);
-mux_rs_rd  : mux_2x1_16 port map(selector_output, id_ex_reg_out(79 downto 64), id_ex_reg_out(47 downto 32), rs_rd);
-mux_rt_imm : mux_2x1_16 port map(selector_output, id_ex_reg_out(63 downto 48), id_ex_reg_out(15 downto 0), rt_imm);
------------------------------------------------------------------------------------
 ------------------------------------------------------------Fetch stage Connections
-
 pc_en <= not stall_sig;
 pc_reg	: reg port map (clk, reset, pc_en, pc_input, pc_output);
 instruction_mem	: instruction_mem port map (pc_output, ir);
@@ -185,9 +177,20 @@ stage_IF_ID_reg	: stage_reg generic map (49) port map (Clk, reset, pc_en, IF_ID_
 -----------------------------------------------------------Decode stage Connections
 
 
+-----------------------------------------------------------------------------------
+--stage_id_ex_reg	: stage_reg generic map (87) port map (Clk, , '1', ,id_ex_reg_out);
+-----------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------Execute stage Connections
+s_selector : source_selector port map(id_ex_reg_out(94 downto 90),selector_output);
+mux_rs_rd  : mux_2x1_16 port map(selector_output, id_ex_reg_out(79 downto 64), id_ex_reg_out(47 downto 32), rs_rd);
+mux_rt_imm : mux_2x1_16 port map(selector_output, id_ex_reg_out(63 downto 48), id_ex_reg_out(15 downto 0), rt_imm);
 
 -----------------------------------------------------------------------------------
 --stage_ex_mem_reg	: stage_reg generic map (87) port map (Clk, , '1', ,ex_mem_reg_out);
+-----------------------------------------------------------------------------------
+
 -----------------------------------------------------------------------------------
 --------------------------------------------------------------Mem stage Connections
 mux_ram_address      : mux_4x1_16 port map(ex_mem_reg_out(78 DOWNTO 77),mem_zero_vec,ex_mem_reg_out(15 DOWNTO 0),ex_mem_reg_out(47 DOWNTO 32),ex_mem_reg_out(74 DOWNTO 59),ram_address);
