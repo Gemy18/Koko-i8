@@ -91,7 +91,8 @@ Component reg IS
 END Component reg;
 
 Component forwarding_unit IS
-	PORT( id_rs,id_rt,id_rd,mem_rd, mem_rs, ex_rd: in std_logic_vector(2 downto 0);
+	PORT( id_opcode, ex_opcode, mem_opcode	     : in std_logic_vector(4 downto 0);
+	      id_rs,id_rt,id_rd,mem_rd, mem_rs, ex_rd: in std_logic_vector(2 downto 0);
 	      source_selector, mem_wb, ex_wb, mem_wb_select, ram_op : in std_logic;
 	      mux_mem_s : out std_logic;
 	      mux1_ex_s,mux2_ex_s: out std_logic_vector(1 downto 0));

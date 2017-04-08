@@ -14,12 +14,14 @@ ARCHITECTURE a_forwarding_unit OF forwarding_unit IS
 	BEGIN
 
 	--Stack pointer cases forwarding.
-	stack_pointer_needed_ex <= (id_opcode = "10110" or id_opcode = "10111" or id_opcode = "11000") and (ex_opcode = "10110" or ex_opcode = "10111" or ex_opcode = "11000");
-	stack_pointer_needed_mem <= (id_opcode = "10110" or id_opcode = "10111" or id_opcode = "11000") and (mem_opcode = "10110" or mem_opcode = "10111" or mem_opcode = "11000");
+	stack_pointer_needed_ex <= '1' when (id_opcode = "10110" or id_opcode = "10111" or id_opcode = "11000") and (ex_opcode = "10110" or ex_opcode = "10111" or ex_opcode = "11000")
+				   else '0';
+	stack_pointer_needed_mem <= '1' when (id_opcode = "10110" or id_opcode = "10111" or id_opcode = "11000") and (mem_opcode = "10110" or mem_opcode = "10111" or mem_opcode = "11000")
+				   else '0';
 
 	--Execute stage forwarding.
-	mux1_ex_s <= "01" when (ex_wb = '1' and((source_selector='0' and id_rs = ex_rd) or (source_selector ='1' and id_rd = ex_rd))) or stack_pointer_needed_ex   --priority is to execute stage
-		  else "10" when (mem_wb = '1' and ((source_selector ='0' and id_rs = mem_rd) or (source_selector ='1' and id_rd = mem_rd))) or stack_pointer_needed_mem
+	mux1_ex_s <= "01" when (ex_wb = '1' and((source_selector='0' and id_rs = ex_rd) or (source_selector ='1' and id_rd = ex_rd))) or stack_pointer_needed_ex = '1'   --priority is to execute stage
+		  else "10" when (mem_wb = '1' and ((source_selector ='0' and id_rs = mem_rd) or (source_selector ='1' and id_rd = mem_rd))) or stack_pointer_needed_mem = '1'
 		  else "00";
 	
 	mux2_ex_s <= "01" when ex_wb = '1' and (source_selector='0' and id_rt = ex_rd)
