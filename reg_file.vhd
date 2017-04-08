@@ -7,11 +7,11 @@ rsdata : out std_logic_vector(15 downto 0);
 rtdata : out std_logic_vector(15 downto 0);
 rdata : out std_logic_vector(15 downto 0);
 write_en: in std_logic ;
-write_back_add:  std_logic_vector(2 downto 0);
-write_back_data: std_logic_vector(15 downto 0);
-rs:  std_logic_vector(2 downto 0);
-rt:  std_logic_vector(2 downto 0);
-rd:  std_logic_vector(2 downto 0));
+write_back_add: in std_logic_vector(2 downto 0);
+write_back_data: in std_logic_vector(15 downto 0);
+rs: in std_logic_vector(2 downto 0);
+rt: in std_logic_vector(2 downto 0);
+rd: in std_logic_vector(2 downto 0));
 
 end REGFILE;
 
