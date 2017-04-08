@@ -5,7 +5,7 @@ entity REGFILE is
 port(clk , rst: in std_logic;
 rsdata : out std_logic_vector(15 downto 0);
 rtdata : out std_logic_vector(15 downto 0);
-rdata : out std_logic_vector(15 downto 0);
+rdata, r0, r1, r2, r3, r4, r5, r6 : out std_logic_vector(15 downto 0);
 write_en: in std_logic ;
 write_back_add: in std_logic_vector(2 downto 0);
 write_back_data: in std_logic_vector(15 downto 0);
@@ -30,7 +30,7 @@ COMPONENT reg IS
 END COMPONENT;
 
 signal out_dec: STD_LOGIC_VECTOR (7 downto 0);
-signal out_reg1,out_reg2,out_reg3,out_reg4,out_reg5,out_reg6: STD_LOGIC_VECTOR (15 downto 0);
+signal out_reg1,out_reg2,out_reg3,out_reg4,out_reg5,out_reg6, out_reg7: STD_LOGIC_VECTOR (15 downto 0);
 
 begin
 
@@ -43,6 +43,7 @@ reg3:   reg  port map (clk,rst,out_dec(2),write_back_data,out_reg3);
 reg4:   reg  port map (clk,rst,out_dec(3),write_back_data,out_reg4);
 reg5:   reg  port map (clk,rst,out_dec(4),write_back_data,out_reg5);
 reg6:   reg  port map (clk,rst,out_dec(5),write_back_data,out_reg6);
+reg7:   reg  port map (clk,rst,out_dec(6),write_back_data,out_reg7);
 
 
 
@@ -52,6 +53,7 @@ else out_reg3 when rs ="010"
 else out_reg4 when rs ="011"
 else out_reg5 when rs ="100"
 else out_reg6 when rs ="101"
+else out_reg7 when rs ="110"
 else "0000000000000000" ;
 
 
@@ -61,6 +63,7 @@ else out_reg3 when rt ="010"
 else out_reg4 when rt ="011"
 else out_reg5 when rt ="100"
 else out_reg6 when rt ="101"
+else out_reg7 when rt ="110"
 else "0000000000000000" ; 
 
 rdata <= out_reg1 when rd = "000"
@@ -69,6 +72,16 @@ else out_reg3 when rd ="010"
 else out_reg4 when rd ="011"
 else out_reg5 when rd ="100"
 else out_reg6 when rd ="101"
+else out_reg7 when rd ="110"
 else "0000000000000000" ;
+
+r0 <= out_reg1;
+r1 <= out_reg2;
+r2 <= out_reg3;
+r3 <= out_reg4;
+r4 <= out_reg5;
+r5 <= out_reg6;
+r6 <= out_reg7;
+
 
 end a_REGFILE;
