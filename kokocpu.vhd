@@ -108,7 +108,7 @@ Component REGFILE is
 port(clk , rst: in std_logic;
 rsdata : out std_logic_vector(15 downto 0);
 rtdata : out std_logic_vector(15 downto 0);
-rdata : out std_logic_vector(15 downto 0);
+rdata, r0, r1, r2, r3, r4, r5, r6 : out std_logic_vector(15 downto 0);
 write_en: in std_logic ;
 write_back_add:  std_logic_vector(2 downto 0);
 write_back_data: std_logic_vector(15 downto 0);
@@ -153,7 +153,7 @@ SIGNAL stall_sig, pc_en : std_logic;
 
 SIGNAL IF_ID_reg_out, IF_ID_reg_in : std_logic_vector(49 DOWNTO 0);
 
-SIGNAL rs_data, rt_data, rd_data, pc_signal, ea_imm_signal : std_logic_vector(15 downto 0);
+SIGNAL rs_data, rt_data, rd_data, pc_signal, ea_imm_signal, r0, r1, r2, r3, r4, r5, r6 : std_logic_vector(15 downto 0);
 SIGNAL read_en, rs_selected, rt, rd : std_logic_vector(2 downto 0);
 SIGNAL br_taken, sp_select, out_en_signal, in_en_signal, ld_signal : std_logic;
 SIGNAL alu_signals : std_logic_vector(1 downto 0);
@@ -163,9 +163,9 @@ SIGNAL ram_signals : std_logic_vector(3 downto 0);
 -----------------------------------------------------------------------------------
 --------------------------------------------------------------Execute Stage signals
 
-SIGNAL id_ex_reg_out, id_ex_reg_in : std_logic_vector(108 DOWNTO 0);
+SIGNAL id_ex_reg_out, id_ex_reg_in : std_logic_vector(107 DOWNTO 0);
 
-SIGNAL alu_br_taken, selector_output, rst_basedon_taken, br_opcode,true_val, ex_mem_reg_reset: std_logic;
+SIGNAL alu_br_taken, selector_output, rst_basedon_taken, br_opcode, ex_mem_reg_reset: std_logic;
 SIGNAL rs_rd, alu_new_pc : std_logic_vector(15 DOWNTO 0);
 SIGNAL rt_imm, alu_ex_out : std_logic_vector(15 DOWNTO 0);
 SIGNAL mux_a, mux_b : std_logic_vector(1 DOWNTO 0);
@@ -243,7 +243,7 @@ rd <= IF_ID_reg_out(20 downto 18);
 stall_detector_port : stall_detector port map (rs_selected, rt, rd, id_ex_reg_out(88 downto 86), 
 	read_en, id_ex_reg_out(107), stall_sig);
 
-REGFILE_port : REGFILE port map (clk_reg_file, reset, rs_data, rt_data, rd_data, wb_en, wb_add,
+REGFILE_port : REGFILE port map (clk_reg_file, reset, rs_data, rt_data, rd_data, r0, r1, r2, r3, r4, r5, r6, wb_en, wb_add,
  	wb_data, rs_selected, rt, rd);
 
 control_unit_port : control_unit port map (op_signal, stall_sig, IF_ID_reg_out(49), 
