@@ -11,10 +11,10 @@ END stall_detector;
 ARCHITECTURE a_stall_detector OF stall_detector IS
 	BEGIN
 
-		output <= '1' when (ID_load = '1' and ((read_en = "001" and rs = ID_rd) 
-							or (read_en = "010" and (rs = ID_rd or rt = ID_rd))
-							or (read_en = "011" and rd = ID_rd) 
-							or (read_en = "100" and (rs = ID_rd or rd = ID_rd))))
+		output <= '1' when (ID_load = '1' and ((read_en = "001" and rs = id_ex_rd) 
+							or (read_en = "010" and (rs = id_ex_rd or rt = id_ex_rd))
+							or (read_en = "011" and rd = id_ex_rd) 
+							or (read_en = "100" and (rs = id_ex_rd or rd = id_ex_rd))))
 				or (op_code = "11101" and ex_mem_op = "11011" and rd = ex_mem_rd)
 				or (op_code = "01010" and (rd = ex_mem_rd or rd = id_ex_rd))
 				or (ex_mem_op = "00001" and ((read_en = "001" and rs = ex_mem_rd) 
@@ -25,6 +25,8 @@ ARCHITECTURE a_stall_detector OF stall_detector IS
 							or (read_en = "010" and (rs = id_ex_rd or rt = id_ex_rd))
 							or (read_en = "011" and rd = id_ex_rd) 
 							or (read_en = "100" and (rs = id_ex_rd or rd = id_ex_rd))))
+				or (op_code = "00001" and rs = id_ex_rd)
+				or (op_code = "00001" and rs = ex_mem_rd)
 
 		else '0';
 

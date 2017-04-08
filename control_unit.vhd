@@ -14,7 +14,7 @@ END control_unit;
 ARCHITECTURE a_control_unit OF control_unit IS
 	BEGIN
 
-		PROCESS(op, IF_int, stall, br_taken)
+		PROCESS(op, IF_int, br_taken)
 			BEGIN
 
 			IF IF_int = '1' then

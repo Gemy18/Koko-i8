@@ -250,8 +250,9 @@ rs_selected <= "110" when sp_select = '1' else IF_ID_reg_out(26 downto 24);
 rt <= IF_ID_reg_out(23 downto 21);
 rd <= IF_ID_reg_out(20 downto 18);
 
-stall_detector_port : stall_detector port map (rs_selected, rt, rd, id_ex_reg_out(82 downto 80), 
-	read_en, ex_mem_reg_out(50 downto 48), id_ex_reg_out(82 downto 80), id_ex_reg_out(107), op_signal, ex_mem_reg_out(58 downto 54), id_ex_reg_out(94 downto 90), stall_sig);
+stall_detector_port : stall_detector port map (rs_selected, rt, rd, id_ex_reg_out(88 downto 86), 
+	read_en, ex_mem_reg_out(50 downto 48), id_ex_reg_out(82 downto 80), id_ex_reg_out(107), op_signal,
+	 ex_mem_reg_out(58 downto 54), id_ex_reg_out(94 downto 90), stall_sig);
 
 REGFILE_port : REGFILE port map (clk_reg_file, reset, rs_data, rt_data, rd_data, r0, r1, r2, r3, r4, r5, r6, wb_en, wb_r6_en, wb_add,
  	wb_data, wb_r6_d, rs_selected, rt, rd);
