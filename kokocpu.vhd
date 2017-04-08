@@ -91,9 +91,10 @@ Component reg IS
 END Component reg;
 
 Component forwarding_unit IS
-	PORT( rs,rt,rd,mem_rd,ex_rd: in std_logic_vector(2 downto 0);
-	      source_selector, mem_wb, ex_wb: in std_logic;
-	      mux1_s,mux2_s: out std_logic_vector(1 downto 0));
+	PORT( id_rs,id_rt,id_rd,mem_rd, mem_rs, ex_rd: in std_logic_vector(2 downto 0);
+	      source_selector, mem_wb, ex_wb, mem_wb_select, ram_op : in std_logic;
+	      mux_mem_s : out std_logic;
+	      mux1_ex_s,mux2_ex_s: out std_logic_vector(1 downto 0));
 END Component;
 
 Component alu IS
@@ -183,10 +184,10 @@ SIGNAL ex_mem_reg_out : std_logic_vector(86 DOWNTO 0);
 SIGNAL mem_wb_reg_reset : std_logic;
 
 -- ram signals
-SIGNAL mem_ram_en : std_logic;
+SIGNAL mem_ram_en, mux_mem_s : std_logic;
 SIGNAL ram_address : std_logic_vector(15 DOWNTO 0);
 SIGNAL ram_data_out: std_logic_vector(15 DOWNTO 0);
-
+SIGNAL ram_data_in : std_logic_vector(15 DOWNTO 0);
 SIGNAL mem_zero_vec: std_logic_vector(15 DOWNTO 0);
 
 SIGNAL mem_new_pc : std_logic_vector(15 DOWNTO 0);
@@ -276,7 +277,8 @@ stage_id_ex_reg	: stage_reg generic map (108) port map (Clk, reset, '1', id_ex_r
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------Execute stage Connections
 s_selector : source_selector port map(id_ex_reg_out(94 downto 90),selector_output);
-forwarding : forwarding_unit port map (id_ex_reg_out(88 downto 86), id_ex_reg_out(85 downto 83), id_ex_reg_out(82 downto 80), mem_wb_reg_out(34 downto 32), ex_mem_reg_out(50 downto 48), selector_output, mem_wb_reg_out(75), ex_mem_reg_out(79), mux_a,mux_b);
+
+forwarding : forwarding_unit port map (id_ex_reg_out(88 downto 86), id_ex_reg_out(85 downto 83), id_ex_reg_out(82 downto 80), mem_wb_reg_out(34 downto 32), mem_wb_reg_out(37 downto 35), ex_mem_reg_out(50 downto 48), selector_output, mem_wb_reg_out(75), ex_mem_reg_out(79),mem_wb_reg_out(79), ex_mem_reg_out(76), mux_mem_s, mux_a,mux_b);
 
 mux_rs_rd  : mux_2x1_16 port map(selector_output, id_ex_reg_out(79 downto 64), id_ex_reg_out(47 downto 32), rs_rd);
 mux_rt_imm : mux_2x1_16 port map(selector_output, id_ex_reg_out(63 downto 48), id_ex_reg_out(15 downto 0), rt_imm);
@@ -331,7 +333,9 @@ stage_ex_mem_reg	: stage_reg generic map (87) port map (Clk, ex_mem_reg_reset, '
 -----------------------------------------------------------------------------------
 --------------------------------------------------------------Mem stage Connections
 mux_ram_address      : mux_4x1_16 port map(ex_mem_reg_out(78 DOWNTO 77),mem_zero_vec,ex_mem_reg_out(15 DOWNTO 0),ex_mem_reg_out(47 DOWNTO 32),ex_mem_reg_out(74 DOWNTO 59),ram_address);
-mem_data_ram         : data_ram port map(clk_mem,mem_ram_en,ex_mem_reg_out(76),ram_address,ex_mem_reg_out(31 DOWNTO 16),ram_data_out);
+ram_data_in <=  ex_mem_reg_out(31 DOWNTO 16) when mux_mem_s = '0'
+		else wb_data;
+mem_data_ram         : data_ram port map(clk_mem,mem_ram_en,ex_mem_reg_out(76),ram_address,ram_data_in,ram_data_out);
 
 mem_br_taken_en_reg <= '1' when ex_mem_reg_out(58 DOWNTO 54) = "11001" or ex_mem_reg_out(58 DOWNTO 54) = "11010"
 	   else '0';
