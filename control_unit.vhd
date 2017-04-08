@@ -16,20 +16,21 @@ ARCHITECTURE a_control_unit OF control_unit IS
 
 		PROCESS(op, IF_int, stall, br_taken)
 			BEGIN
-			IF op = "00000" or stall = '1' or br_taken = '1' THEN
-				wb <= "00000";
-				ram <= "0000";
-				alu <= "00";
-				read_en <= "000";
-				sp_select <= '0';
-				in_en <= '0';	out_en <= '0';	ld <= '0';
 
-			ELSIF IF_int = '1' then
+			IF IF_int = '1' then
 				wb <= "00101";
 				ram <= "1011";
 				alu <= "11";
 				read_en <= "100";
 				sp_select <= '1';
+				in_en <= '0';	out_en <= '0';	ld <= '0';
+
+			ELSIF op = "00000" or stall = '1' or br_taken = '1' THEN
+				wb <= "00000";
+				ram <= "0000";
+				alu <= "00";
+				read_en <= "000";
+				sp_select <= '0';
 				in_en <= '0';	out_en <= '0';	ld <= '0';
 
 			ElSIF op = "00001" then		-- mov
