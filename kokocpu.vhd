@@ -242,7 +242,7 @@ stage_IF_ID_reg	: stage_reg generic map (50) port map (Clk, reset, pc_en, IF_ID_
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------Decode stage Connections
 
-br_taken <= (mem_br_taken or alu_br_taken);
+br_taken <= (mem_br_taken or alu_br_taken_out);
 op_signal <= IF_ID_reg_out(31 downto 27) when IF_ID_reg_out(49) = '0' else "10110";
 pc_signal <= IF_ID_reg_out(47 downto 32);
 ea_imm_signal <= IF_ID_reg_out(15 downto 0);
