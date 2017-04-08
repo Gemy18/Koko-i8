@@ -2,7 +2,7 @@ LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
 
 ENTITY forwarding_unit IS
-	PORT( rs,rt,rd,mem_rd,ex_rd: in std_logic_vector(3 downto 0);
+	PORT( rs,rt,rd,mem_rd,ex_rd: in std_logic_vector(2 downto 0);
 	      source_selector, mem_wb, ex_wb: in std_logic;
 	      mux1_s,mux2_s: out std_logic_vector(1 downto 0));
 END forwarding_unit;
