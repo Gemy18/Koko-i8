@@ -275,7 +275,7 @@ id_ex_reg_in(85 downto 83) <= rt;
 id_ex_reg_in(82 downto 80) <= rd when stall_sig = '0' else "111";
 id_ex_reg_in(79 downto 64) <= rd_data when op_signal = "01010" else rs_data ;
 id_ex_reg_in(63 downto 48) <= rt_data;
-id_ex_reg_in(47 downto 32) <= id_ex_reg_in(31 downto 16) when (IF_ID_reg_out(49) = '1' or op_signal = "11000") else rd_data;
+id_ex_reg_in(47 downto 32) <= id_ex_reg_in(31 downto 16) when op_signal = "11000" else id_ex_reg_out(31 downto 16) when IF_ID_reg_out(49) = '1' else rd_data;
 id_ex_reg_in(31 downto 16) <= pc_signal;
 id_ex_reg_in(15 downto 0) <= ea_imm_signal;
 
