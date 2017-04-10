@@ -69,7 +69,7 @@ END COMPONENT;
 
 Component pc_selector IS
 	PORT(	inc_pc, alu_pc, mem_pc : IN std_logic_vector(15 DOWNTO 0);
-		alu_br_taken, mem_br_taken, intR, IF_int : IN std_logic;
+		alu_br_taken, mem_br_taken, intR, IF_int, rst : IN std_logic;
 		output : OUT std_logic_vector(15 DOWNTO 0));
 END Component;
 
@@ -229,10 +229,10 @@ zerovec2 <= (OTHERS => '0');
 ------------------------------------------------------------Fetch stage Connections
 
 pc_en <= not stall_sig;
-pc_reg	: reg port map (clk, reset, pc_en, pc_input, pc_output);
+pc_reg	: reg port map (clk, '0', pc_en, pc_input, pc_output);
 instruction_mem_port	: instruction_mem port map (pc_output, ir);
 pc_inc_port : pc_inc port map (pc_output, pc_incremented);
-pc_selector_port : pc_selector port map (pc_incremented, alu_new_pc, mem_new_pc, alu_br_taken, mem_br_taken, int_r, IF_ID_reg_out(48), pc_input);
+pc_selector_port : pc_selector port map (pc_incremented, alu_new_pc, mem_new_pc, alu_br_taken, mem_br_taken, int_r, IF_ID_reg_out(48), reset, pc_input);
 IF_ID_reg_in <= IF_ID_reg_out(48) & (int_r and (not IF_ID_reg_out(48))) & pc_incremented & ir;
 
 -----------------------------------------------------------------------------------
@@ -275,7 +275,7 @@ id_ex_reg_in(85 downto 83) <= rt;
 id_ex_reg_in(82 downto 80) <= rd when stall_sig = '0' else "111";
 id_ex_reg_in(79 downto 64) <= rd_data when op_signal = "01010" else rs_data ;
 id_ex_reg_in(63 downto 48) <= rt_data;
-id_ex_reg_in(47 downto 32) <= rd_data when IF_ID_reg_out(49) = '0' else pc_signal;
+id_ex_reg_in(47 downto 32) <= rd_data when IF_ID_reg_out(49) = '0' else id_ex_reg_out(31 downto 16);
 id_ex_reg_in(31 downto 16) <= pc_signal;
 id_ex_reg_in(15 downto 0) <= ea_imm_signal;
 
