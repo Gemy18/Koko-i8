@@ -157,7 +157,7 @@ ARCHITECTURE a_control_unit OF control_unit IS
 				wb <= "00000";
 				ram <= "0111";
 				alu <= "00";
-				read_en <= "001";
+				read_en <= "011";
 				sp_select <= '0';
 				in_en <= '0';	out_en <= '0'; 	ld <= '0';
 			END IF;
