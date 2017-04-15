@@ -408,7 +408,6 @@ SIGNAL mem_wb_reg_reset : std_logic;
 -- ram signals
 
 SIGNAL mem_ram_en, mux_mem_s : std_logic;
-
 SIGNAL ram_address : std_logic_vector(15 DOWNTO 0);
 
 SIGNAL ram_data_out: std_logic_vector(15 DOWNTO 0);
@@ -426,7 +425,7 @@ SIGNAL mem_br_taken_en_reg : std_logic;
 
 SIGNAL mem_br_taken : std_logic;
 
-
+SIGNAL mem_ram_wr : std_logic;
 
 
 -----------------------------------------------------------------------------------
@@ -595,11 +594,11 @@ id_ex_reg_in(85 downto 83) <= rt;
 
 id_ex_reg_in(82 downto 80) <= rd when stall_sig = '0' else "111";
 
-id_ex_reg_in(79 downto 64) <= rd_data when op_signal = "01010" else rs_data ;
+id_ex_reg_in(79 downto 64) <= rd_data when op_signal = "11000" else rd_data when op_signal = "01010" else rs_data ;
 
 id_ex_reg_in(63 downto 48) <= rt_data;
 
-id_ex_reg_in(47 downto 32) <= id_ex_reg_in(31 downto 16) when op_signal = "11000" else id_ex_reg_out(31 downto 16) when IF_ID_reg_out(49) = '1' else rd_data;
+id_ex_reg_in(47 downto 32) <= pc_signal when op_signal = "11000" else id_ex_reg_out(31 downto 16) when IF_ID_reg_out(49) = '1' else rd_data;
 
 id_ex_reg_in(31 downto 16) <= pc_signal;
 
@@ -671,8 +670,10 @@ muxb	   : mux_4x1_16 port map(mux_b, rt_imm,forwarded_e_to_e, forwarded_m_to_e, 
 alu_new_pc <= forwarded_e_to_e when mux_a="01"
 
 	      else forwarded_m_to_e when mux_a="10"
+	
+	      else ex_mem_reg_out(47 downto 32) when ex_mem_reg_out(58 downto 54) = "11000"
 
-	      else ex_mem_reg_out(31 downto 16);	--ask if this is correct and not id_ex_reg_out.
+	      else ex_mem_reg_out(31 downto 16); 	--ask if this is correct and not id_ex_reg_out.
 
 
 
@@ -697,7 +698,7 @@ br_opcode <= '1' when id_ex_reg_out(94 downto 90) = "10000" or id_ex_reg_out(94 
 
 	     else '0';
 
-alu_br_taken <= '1' when (br_opcode = '1' and alu_ex_out(0) = '1') or (id_ex_reg_out(94 downto 90) = "11000")
+alu_br_taken <= '1' when ((br_opcode = '1' and alu_ex_out(0) = '1') or (id_ex_reg_out(94 downto 90) = "11000")) and alu_br_taken_out = '0'
 
 		else '0';
 
@@ -769,7 +770,7 @@ ram_data_in <=  ex_mem_reg_out(31 DOWNTO 16) when mux_mem_s = '0'
 
 		else wb_data;
 
-mem_data_ram         : data_ram port map(clk_mem,mem_ram_en,ex_mem_reg_out(76),ram_address,ram_data_in,ram_data_out, int_add);
+mem_data_ram         : data_ram port map(clk_mem,mem_ram_en,mem_ram_wr,ram_address,ram_data_in,ram_data_out, int_add);
 
 
 
@@ -795,6 +796,8 @@ mem_ram_en <= '0' when mem_wb_reg_out(82) = '1'
 		else '1' when ex_mem_reg_out(76) = '0'
 
 		else ex_mem_reg_out(75);
+
+mem_ram_wr <= '0' when mem_br_taken = '1' else ex_mem_reg_out(76);
 
 
 
