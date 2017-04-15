@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 entity REGFILE is 
-port(clk , rst: in std_logic;
+port(clk, clk2 , rst: in std_logic;
 rsdata : out std_logic_vector(15 downto 0);
 rtdata : out std_logic_vector(15 downto 0);
 rdata, r0, r1, r2, r3, r4, r5, r6 : out std_logic_vector(15 downto 0);
@@ -31,13 +31,14 @@ END COMPONENT;
 
 signal out_dec: STD_LOGIC_VECTOR (7 downto 0);
 signal out_reg1,out_reg2,out_reg3,out_reg4,out_reg5,out_reg6, out_reg7, wb_d, sp_data: STD_LOGIC_VECTOR (15 downto 0);
-signal sp_select : std_logic;
+signal sp_select, sp_rst : std_logic;
 
 begin
 
 sp_select <= out_dec(6) or rst or r6_en;
 wb_d <= write_back_data when rst = '0' else "0000001111111111";
 sp_data <= wb_d when r6_en = '0' else r6_d;
+sp_rst <= clk and clk2 and rst;
 
 decoder:   dec_3_x_8  port map (write_back_add,out_dec,write_en);
 reg1:   reg  port map (clk,rst,out_dec(0),wb_d,out_reg1);

@@ -9,14 +9,14 @@ ENTITY data_ram IS
 		wr  : IN std_logic;
 		address : IN  std_logic_vector(15 DOWNTO 0);
 		datain  : IN  std_logic_vector(15 DOWNTO 0);
-		dataout : OUT std_logic_vector(15 DOWNTO 0));
+		dataout, int_addr : OUT std_logic_vector(15 DOWNTO 0));
 END ENTITY data_ram;
 
 ARCHITECTURE a_data_ram OF data_ram IS
 
 TYPE ram_type IS ARRAY(0 TO 2047) OF std_logic_vector(15 DOWNTO 0);
 SIGNAL ram : ram_type;
---SIGNAL int_addr : std_logic_vector(15 DOWNTO 0);
+SIGNAL int_add : std_logic_vector(15 DOWNTO 0);
 
 BEGIN
 	PROCESS(clk) IS
@@ -28,6 +28,6 @@ BEGIN
 			END IF;
 	END PROCESS;
 	dataout <= ram(to_integer(unsigned(address)));
-	--int_addr <= "0000000000000001";
-	--int_add <= ram(to_integer(unsigned(int_addr)));
+	int_add <= "0000000000000001";
+	int_addr <= ram(to_integer(unsigned(int_add)));
 END a_data_ram;

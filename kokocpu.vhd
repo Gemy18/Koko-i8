@@ -71,7 +71,7 @@ Component data_ram IS
 
 		datain  : IN  std_logic_vector(15 DOWNTO 0);
 
-		dataout : OUT std_logic_vector(15 DOWNTO 0));
+		dataout, int_addr : OUT std_logic_vector(15 DOWNTO 0));
 
 END Component;
 
@@ -149,7 +149,7 @@ END COMPONENT;
 
 Component pc_selector IS
 
-	PORT(	inc_pc, alu_pc, mem_pc : IN std_logic_vector(15 DOWNTO 0);
+	PORT(	int_addr, inc_pc, alu_pc, mem_pc : IN std_logic_vector(15 DOWNTO 0);
 
 		alu_br_taken, mem_br_taken, intR, IF_int, rst : IN std_logic;
 
@@ -233,7 +233,7 @@ END Component;
 
 Component REGFILE is 
 
-port(clk , rst: in std_logic;
+port(clk, clk2 , rst: in std_logic;
 
 rsdata : out std_logic_vector(15 downto 0);
 
@@ -320,7 +320,7 @@ SIGNAL zerovec1: std_logic_vector(86 DOWNTO 0);
 
 SIGNAL zerovec2: std_logic_vector(98 DOWNTO 0);
 
-SIGNAL pc_input, pc_output, pc_incremented : std_logic_vector(15 DOWNTO 0);
+SIGNAL pc_input, pc_output, pc_incremented, int_add : std_logic_vector(15 DOWNTO 0);
 
 SIGNAL ir : std_logic_vector(31 DOWNTO 0);
 
@@ -496,17 +496,18 @@ zerovec2 <= (OTHERS => '0');
 
 
 
-pc_en <= not stall_sig;
+pc_en <= not ( stall_sig );
 
-pc_reg	: reg port map (clk, '0', pc_en, pc_input, pc_output);
+pc_reg	: reg port map (clk, reset, pc_en, pc_input, pc_output);
 
 instruction_mem_port	: instruction_mem port map (pc_output, ir);
 
 pc_inc_port : pc_inc port map (pc_output, pc_incremented);
 
-pc_selector_port : pc_selector port map (pc_incremented, alu_new_pc, mem_new_pc, alu_br_taken, mem_br_taken, int_r, IF_ID_reg_out(48), reset, pc_input);
+pc_selector_port : pc_selector port map (int_add, pc_incremented, alu_new_pc, mem_new_pc, alu_br_taken_out, mem_br_taken, int_r, IF_ID_reg_out(48), reset, pc_input);
 
-IF_ID_reg_in <= IF_ID_reg_out(48) & (int_r and (not IF_ID_reg_out(48))) & pc_incremented & ir;
+IF_ID_reg_in <= IF_ID_reg_out(48) & (int_r and (not IF_ID_reg_out(48))) & pc_incremented & ir when br_taken = '0' 
+	else "00" & pc_incremented & "0000011111111111" & "1111111111111111";
 
 
 
@@ -553,7 +554,7 @@ stall_detector_port : stall_detector port map (rs_selected, rt, rd, id_ex_reg_ou
 
 
 
-REGFILE_port : REGFILE port map (clk_reg_file, reset, rs_data, rt_data, rd_data, r0, r1, r2, r3, r4, r5, r6, wb_en, wb_r6_en, wb_add,
+REGFILE_port : REGFILE port map (clk_reg_file, clk, reset, rs_data, rt_data, rd_data, r0, r1, r2, r3, r4, r5, r6, wb_en, wb_r6_en, wb_add,
 
  	wb_data, wb_r6_d, rs_selected, rt, rd);
 
@@ -768,7 +769,7 @@ ram_data_in <=  ex_mem_reg_out(31 DOWNTO 16) when mux_mem_s = '0'
 
 		else wb_data;
 
-mem_data_ram         : data_ram port map(clk_mem,mem_ram_en,ex_mem_reg_out(76),ram_address,ram_data_in,ram_data_out);
+mem_data_ram         : data_ram port map(clk_mem,mem_ram_en,ex_mem_reg_out(76),ram_address,ram_data_in,ram_data_out, int_add);
 
 
 
