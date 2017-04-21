@@ -200,14 +200,21 @@ END Component reg;
 Component forwarding_unit IS
 
 	PORT( id_opcode, ex_opcode, mem_opcode	     : in std_logic_vector(4 downto 0);
-
+	      
 	      id_rs,id_rt,id_rd,mem_rd, mem_rs, ex_rd: in std_logic_vector(2 downto 0);
-
+	      
 	      source_selector, mem_wb, ex_wb, mem_wb_select, ram_op : in std_logic;
-
-	      mux_mem_s : out std_logic;
-
-	      mux1_ex_s,mux2_ex_s: out std_logic_vector(1 downto 0));
+	      
+              mux_mem_s : out std_logic;
+	     
+              mux1_ex_s,mux2_ex_s: out std_logic_vector(1 downto 0);
+	      
+              mem_imm, mem_dout, mem_alu_out, mem_rs_d : in std_logic_vector (15 downto 0);
+	      
+              mem_wb_op : in std_logic_vector (2 downto 0);
+	      
+              forwarded_m_to_e : out std_logic_vector (15 downto 0)
+	);
 
 END Component;
 
@@ -623,89 +630,44 @@ stage_id_ex_reg	: stage_reg generic map (108) port map (Clk, reset, '1', id_ex_r
 s_selector : source_selector port map(id_ex_reg_out(94 downto 90),selector_output);
 
 
-
-
-forwarding : forwarding_unit port map (id_ex_reg_out(94 downto 90), ex_mem_reg_out(58 downto 54), mem_wb_reg_out(42 downto 38),id_ex_reg_out(88 downto 86), id_ex_reg_out(85 downto 83), id_ex_reg_out(82 downto 80), mem_wb_reg_out(34 downto 32), mem_wb_reg_out(37 downto 35), ex_mem_reg_out(50 downto 48), selector_output, mem_wb_reg_out(75), ex_mem_reg_out(79),mem_wb_reg_out(79), ex_mem_reg_out(76), mux_mem_s, mux_a,mux_b);
-
-
+forwarding : forwarding_unit port map (id_ex_reg_out(94 downto 90), ex_mem_reg_out(58 downto 54), mem_wb_reg_out(42 downto 38),id_ex_reg_out(88 downto 86), id_ex_reg_out(85 downto 83), id_ex_reg_out(82 downto 80), mem_wb_reg_out(34 downto 32), mem_wb_reg_out(37 downto 35), ex_mem_reg_out(50 downto 48), selector_output, mem_wb_reg_out(75), ex_mem_reg_out(79),mem_wb_reg_out(79), ex_mem_reg_out(76), mux_mem_s, mux_a,mux_b,
+	     mem_wb_reg_out (15 downto 0), mem_wb_reg_out(74 downto 59), mem_wb_reg_out(58 downto 43), mem_wb_reg_out(31 downto 16), mem_wb_reg_out(78 downto 76), forwarded_m_to_e);
 
 
 mux_rs_rd  : mux_2x1_16 port map(selector_output, id_ex_reg_out(79 downto 64), id_ex_reg_out(47 downto 32), rs_rd);
 
 mux_rt_imm : mux_2x1_16 port map(selector_output, id_ex_reg_out(63 downto 48), id_ex_reg_out(15 downto 0), rt_imm);
 
-
-
-
 forwarded_e_to_e <= ex_mem_reg_out (15 downto 0) when ex_mem_reg_out(58 downto 54) = "11011"
-
 			 else ex_mem_reg_out(74 downto 59);
-
-
-
-
-forwarded_m_to_e <= mem_wb_reg_out (15 downto 0) when mem_wb_reg_out(42 downto 38) = "11011" or mem_wb_reg_out(78 downto 76) = "011" 
-
-       else mem_wb_reg_out(74 downto 59) when mem_wb_reg_out(78 downto 76) = "001" 
-
-       else mem_wb_reg_out(58 downto 43) when mem_wb_reg_out(78 downto 76) = "010" 
-
-       else mem_wb_reg_out(31 downto 16) when mem_wb_reg_out(78 downto 76) = "100"
-
-       else "0000000000000000"; 
-
-
-
-
-
-
 
 muxa	   : mux_4x1_16 port map(mux_a, rs_rd, forwarded_e_to_e, forwarded_m_to_e, rs_rd, a);
 
 muxb	   : mux_4x1_16 port map(mux_b, rt_imm,forwarded_e_to_e, forwarded_m_to_e, rt_imm, b);
 
-
-
-
 alu_new_pc <= forwarded_e_to_e when mux_a="01"
-
 	      else forwarded_m_to_e when mux_a="10"
-	
 	      else ex_mem_reg_out(47 downto 32) when ex_mem_reg_out(58 downto 54) = "11000"
-
 	      else ex_mem_reg_out(31 downto 16); 	--ask if this is correct and not id_ex_reg_out.
 
-
-
-
 alu1	   : alu port map(a,b, id_ex_reg_out(94 downto 90), id_ex_reg_out(89), flags_out(3), flags_out(2), flags_out(1), flags_out(0), alu_ex_out, flags_in(3), flags_in(2), flags_in(1), flags_in(0));
-
-
 
 
 flags_backup  : stage_reg generic map (4) port map (Clk, reset, id_ex_reg_out(95), flags_out, flags_old_out);
 
 to_flags <= flags_old_out when id_ex_reg_out(94 downto 90) = "11010"	--when rti, get backup flags.
-
 	    else flags_in;
 
 flags_current : stage_reg generic map (4) port map (Clk, reset, '1', to_flags, flags_out);
 
-
-
-
 br_opcode <= '1' when id_ex_reg_out(94 downto 90) = "10000" or id_ex_reg_out(94 downto 90) = "10001" or id_ex_reg_out(94 downto 90) = "10010" or id_ex_reg_out(94 downto 90) = "10011"
-
-	     else '0';
+	    else '0';
 
 alu_br_taken <= '1' when ((br_opcode = '1' and alu_ex_out(0) = '1') or (id_ex_reg_out(94 downto 90) = "11000")) and alu_br_taken_out = '0'
-
-		else '0';
+	    else '0';
 
 rst_basedon_taken <= '1' when (alu_br_taken_out = '1' or mem_br_taken = '1')
-
-		     else '0';
-
+            else '0';
 
 
 
@@ -741,19 +703,10 @@ ex_mem_reg_in(85) <= id_ex_reg_out(106);
 
 ex_mem_reg_in(86) <= alu_br_taken;
 
-
-
-
 alu_br_taken_out <= ex_mem_reg_out(86);
 
-
-
-
 ex_mem_reg_in_or_rst <= ex_mem_reg_in when rst_basedon_taken = '0'
-
 			else zerovec1; 
-
-
 
 
 -----------------------------------------------------------------------------------

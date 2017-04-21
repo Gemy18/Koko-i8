@@ -6,7 +6,11 @@ ENTITY forwarding_unit IS
 	      id_rs,id_rt,id_rd,mem_rd, mem_rs, ex_rd: in std_logic_vector(2 downto 0);
 	      source_selector, mem_wb, ex_wb, mem_wb_select, ram_op : in std_logic;
 	      mux_mem_s : out std_logic;
-	      mux1_ex_s,mux2_ex_s: out std_logic_vector(1 downto 0));
+	      mux1_ex_s,mux2_ex_s: out std_logic_vector(1 downto 0);
+	      mem_imm, mem_dout, mem_alu_out, mem_rs_d : in std_logic_vector (15 downto 0);
+	      mem_wb_op : in std_logic_vector (2 downto 0);
+	      forwarded_m_to_e : out std_logic_vector (15 downto 0)
+	);
 END forwarding_unit;
 
 ARCHITECTURE a_forwarding_unit OF forwarding_unit IS
@@ -27,7 +31,13 @@ ARCHITECTURE a_forwarding_unit OF forwarding_unit IS
 	mux2_ex_s <= "01" when ex_wb = '1' and (source_selector='0' and id_rt = ex_rd)
 		  else "10" when  mem_wb = '1' and (source_selector ='0' and id_rt = mem_rd)
 		  else "00";
-
+	
+	forwarded_m_to_e <= mem_imm when mem_opcode = "11011" or mem_wb_op = "011" 
+                  else mem_dout when mem_wb_op = "001" 
+                  else mem_alu_out when mem_wb_op = "010" 
+                  else mem_rs_d when mem_wb_op = "100"
+                  else "0000000000000000"; 
+	
 	--Memory stage forwarding.
 	mux_mem_s <= '1' when ((mem_wb_select ='0' and mem_rs = ex_rd) or (mem_wb_select ='1' and mem_rd = ex_rd)) and ram_op = '1'
 		     else '0';
